@@ -401,12 +401,12 @@ function TitanicSampleDataPage({
 
 /* ─────────────────────────────────────────────────────────────
    TitanicQaApp (Root Component)
-───────────────────────────────────────────────────────────── */
+──────��────────────────────────────────────────────────────── */
 export default function TitanicQaApp() {
   const [view, setView] = useState<"qa" | "data">("qa");
 
   return (
-    <div className="h-screen bg-white dark:bg-gray-900">
+    <div className="h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-900">
       {view === "qa" ? (
         <TitanicQAPage onSwitchView={() => setView("data")} />
       ) : (
