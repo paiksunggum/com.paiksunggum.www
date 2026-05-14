@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { Toaster } from 'sonner'
 import Navbar from '@/components/navbar'
 import './globals.css'
 
@@ -42,6 +43,7 @@ export default function RootLayout({
         <main className="flex-1">
           {children}
         </main>
+        <Toaster richColors position="top-center" />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
