@@ -24,6 +24,12 @@ import {
 
 type Gender = "male" | "female" | "none";
 
+const genderLabels: Record<Gender, string> = {
+  male: "남자",
+  female: "여자",
+  none: "선택안함",
+};
+
 function FieldRow({
   icon: Icon,
   children,
@@ -66,6 +72,8 @@ function Section({
 const fieldInputClass =
   "h-10 w-full min-w-0 border-0 bg-transparent p-0 text-[15px] text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 focus-visible:ring-0";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+
 type SignupDialogProps = {
   isHome: boolean;
 };
@@ -76,10 +84,63 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
   const [showPassword, setShowPassword] = React.useState(false);
   const [gender, setGender] = React.useState<Gender | null>(null);
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setOpen(false);
-    router.push("/");
+    if (!gender) return;
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const userId = String(data.get("userId") ?? "");
+    const password = String(data.get("password") ?? "");
+    const email = String(data.get("email") ?? "");
+    const name = String(data.get("name") ?? "");
+    const birthdate = String(data.get("birthdate") ?? "");
+
+    const payload = {
+      userId,
+      password,
+      email,
+      name,
+      birthdate,
+      gender,
+    };
+
+    try {
+      const res = await fetch(`${API_BASE}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as {
+          detail?: string | { msg?: string }[];
+        } | null;
+        const detail = body?.detail;
+        const message = Array.isArray(detail)
+          ? detail.map((d) => d.msg).filter(Boolean).join(", ")
+          : typeof detail === "string"
+            ? detail
+            : "회원가입 요청에 실패했습니다.";
+        throw new Error(message);
+      }
+
+      alert(
+        [
+          `아이디: ${userId}@naver.com`,
+          `비밀번호: ${password}`,
+          `이메일: ${email || "(미입력)"}`,
+          `이름: ${name}`,
+          `생년월일: ${birthdate}`,
+          `성별: ${genderLabels[gender]}`,
+        ].join("\n"),
+      );
+
+      setOpen(false);
+      router.push("/");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "회원가입 요청에 실패했습니다.");
+    }
   }
 
   const triggerClass = isHome
