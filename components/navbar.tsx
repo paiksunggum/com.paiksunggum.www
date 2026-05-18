@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import NavWeather from "@/components/nav-weather";
+import SignupDialog from "@/components/signup-dialog";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -65,6 +66,7 @@ export default function Navbar() {
           >
             [타이타닉]
           </Link>
+          <SignupDialog isHome={isHome} />
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <button
