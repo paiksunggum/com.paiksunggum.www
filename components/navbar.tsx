@@ -19,15 +19,45 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import NavWeather from "@/components/nav-weather";
 import SignupDialog from "@/components/signup-dialog";
+import FormaLogo from "@/components/forma-logo";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
 
 export default function Navbar() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [open, setOpen] = React.useState(false);
 
-  function handleLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setOpen(false);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const email = String(data.get("email") ?? "");
+    const password = String(data.get("password") ?? "");
+
+    try {
+      const res = await fetch(`${API_BASE}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: email, password }),
+      });
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as {
+          detail?: unknown;
+        } | null;
+        const detail = body?.detail;
+        const message =
+          typeof detail === "string"
+            ? detail
+            : "로그인 요청에 실패했습니다.";
+        throw new Error(message);
+      }
+      setOpen(false);
+    } catch (err) {
+      alert(
+        err instanceof Error ? err.message : "로그인 요청에 실패했습니다.",
+      );
+    }
   }
 
   return (
@@ -45,11 +75,11 @@ export default function Navbar() {
             href="/"
             className={
               isHome
-                ? "shrink-0 text-base font-semibold text-white hover:text-white/85 transition-colors"
-                : "shrink-0 text-base font-semibold text-foreground hover:opacity-80 transition-opacity"
+                ? "shrink-0 transition-opacity hover:opacity-85"
+                : "shrink-0 transition-opacity hover:opacity-80"
             }
           >
-            RagWatson
+            <FormaLogo />
           </Link>
           <NavWeather isHome={isHome} />
         </div>
@@ -64,7 +94,7 @@ export default function Navbar() {
                 : "inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
             }
           >
-            [타이타닉]
+            파일 올리기
           </Link>
           <SignupDialog isHome={isHome} />
           <Dialog open={open} onOpenChange={setOpen}>

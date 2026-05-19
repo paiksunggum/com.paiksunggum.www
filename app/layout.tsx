@@ -9,24 +9,16 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'RagWatson',
-  description: '문서·데이터 기반 질의응답',
+  title: 'Forma',
+  description: '스포츠별 자세 가이드 · Forma 포르마',
   icons: {
     icon: [
       {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
+        url: '/forma-icon.svg',
         type: 'image/svg+xml',
       },
     ],
-    apple: '/apple-icon.png',
+    apple: '/forma-icon.svg',
   },
 }
 

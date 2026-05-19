@@ -7,20 +7,54 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-async function postCsv(file: File) {
+const ACCEPTED_FILE_TYPES =
+  ".csv,text/csv,video/mp4,video/quicktime,video/webm,.mp4,.mov,.webm";
+const VIDEO_EXTENSIONS = [".mp4", ".mov", ".webm"];
+
+type UploadKind = "csv" | "video";
+
+type UploadResult = {
+  ok?: boolean;
+  error?: string;
+  fileName?: string;
+  kind?: UploadKind;
+  size?: number;
+  url?: string;
+  lineCount?: number;
+  dataRowCount?: number;
+};
+
+function getAcceptedKind(file: File): UploadKind | null {
+  const lowerName = file.name.toLowerCase();
+
+  if (lowerName.endsWith(".csv") || file.type === "text/csv") {
+    return "csv";
+  }
+
+  if (
+    file.type.startsWith("video/") ||
+    VIDEO_EXTENSIONS.some((ext) => lowerName.endsWith(ext))
+  ) {
+    return "video";
+  }
+
+  return null;
+}
+
+function formatFileSize(size: number | undefined) {
+  if (!size) return "0 MB";
+
+  return `${(size / 1024 / 1024).toFixed(1)} MB`;
+}
+
+async function postFile(file: File) {
   const formData = new FormData();
   formData.set("file", file);
-  const res = await fetch("/api/upload-csv", {
+  const res = await fetch("/api/upload-file", {
     method: "POST",
     body: formData,
   });
-  const data = (await res.json()) as {
-    ok?: boolean;
-    error?: string;
-    fileName?: string;
-    lineCount?: number;
-    dataRowCount?: number;
-  };
+  const data = (await res.json()) as UploadResult;
   if (!res.ok || !data.ok) {
     throw new Error(data.error ?? `업로드 실패 (${res.status})`);
   }
@@ -30,19 +64,31 @@ async function postCsv(file: File) {
 export default function TitanicHomePage() {
   const [uploading, setUploading] = React.useState(false);
   const [dragOver, setDragOver] = React.useState(false);
+  const [lastUpload, setLastUpload] = React.useState<UploadResult | null>(null);
   const panelInputRef = React.useRef<HTMLInputElement>(null);
   const buttonInputRef = React.useRef<HTMLInputElement>(null);
 
   const runUpload = React.useCallback(async (file: File | undefined) => {
     if (!file) return;
+
+    const kind = getAcceptedKind(file);
+    if (!kind) {
+      toast.error("CSV(.csv) 또는 동영상(.mp4, .mov, .webm)만 업로드할 수 있습니다.");
+      return;
+    }
+
     setUploading(true);
     try {
-      const data = await postCsv(file);
+      const data = await postFile(file);
+      setLastUpload(data);
       try {
         sessionStorage.setItem(
-          "titanicLastCsvUpload",
+          "lastFileUpload",
           JSON.stringify({
             fileName: data.fileName,
+            kind: data.kind,
+            size: data.size,
+            url: data.url,
             lineCount: data.lineCount,
             dataRowCount: data.dataRowCount,
             uploadedAt: new Date().toISOString(),
@@ -51,9 +97,11 @@ export default function TitanicHomePage() {
       } catch {
         /* ignore */
       }
-      toast.success(
-        `${data.fileName} 업로드 완료 (데이터 행 약 ${data.dataRowCount}개)`,
-      );
+      const message =
+        data.kind === "csv"
+          ? `${data.fileName} 업로드 완료 (데이터 행 약 ${data.dataRowCount}개)`
+          : `${data.fileName} 동영상 업로드 완료`;
+      toast.success(message);
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "업로드에 실패했습니다.");
     } finally {
@@ -79,8 +127,8 @@ export default function TitanicHomePage() {
     if (uploading) return;
     const f = e.dataTransfer.files[0];
     if (!f) return;
-    if (!f.name.toLowerCase().endsWith(".csv")) {
-      toast.error("CSV(.csv) 파일만 업로드할 수 있습니다.");
+    if (!getAcceptedKind(f)) {
+      toast.error("CSV(.csv) 또는 동영상(.mp4, .mov, .webm)만 업로드할 수 있습니다.");
       return;
     }
     void runUpload(f);
@@ -89,10 +137,10 @@ export default function TitanicHomePage() {
   return (
     <div className="min-h-[calc(100vh-3.5rem)] bg-white px-4 py-10 text-neutral-900">
       <h1 className="text-center text-4xl font-bold tracking-tight md:text-6xl">
-        타이타닉 홈
+        포르마
       </h1>
       <p className="mx-auto mt-3 max-w-xl text-center text-sm text-neutral-500">
-        titanic.csv 같은 CSV는 아래{" "}
+        CSV 또는 동영상 파일은 아래{" "}
         <strong className="text-neutral-700">업로드 창</strong>에 끌어다 놓거나
         클릭하거나, <strong className="text-neutral-700">업로드 버튼</strong>으로
         파일을 선택해 업로드할 수 있습니다.
@@ -109,7 +157,7 @@ export default function TitanicHomePage() {
           <input
             ref={panelInputRef}
             type="file"
-            accept=".csv,text/csv"
+            accept={ACCEPTED_FILE_TYPES}
             className="sr-only"
             tabIndex={-1}
             aria-hidden
@@ -119,7 +167,7 @@ export default function TitanicHomePage() {
           <div
             role="button"
             tabIndex={0}
-            aria-label="CSV 업로드 영역. 클릭하거나 파일을 끌어다 놓으세요."
+            aria-label="CSV 또는 동영상 업로드 영역. 클릭하거나 파일을 끌어다 놓으세요."
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
@@ -148,10 +196,10 @@ export default function TitanicHomePage() {
               aria-hidden
             />
             <p className="text-base font-medium text-neutral-800">
-              CSV를 여기에 끌어다 놓거나 클릭하세요
+              CSV 또는 동영상을 여기에 끌어다 놓거나 클릭하세요
             </p>
             <p className="mt-2 text-sm text-neutral-500">
-              예: titanic.csv — 최대 15MB
+              예: titanic.csv, posture.mp4 — 최대 100MB
             </p>
           </div>
         </section>
@@ -178,7 +226,7 @@ export default function TitanicHomePage() {
           <input
             ref={buttonInputRef}
             type="file"
-            accept=".csv,text/csv"
+            accept={ACCEPTED_FILE_TYPES}
             className="sr-only"
             tabIndex={-1}
             aria-hidden
@@ -199,6 +247,35 @@ export default function TitanicHomePage() {
             버튼을 누르면 탐색기가 열리고, 선택 즉시 서버로 전송됩니다.
           </p>
         </section>
+
+        {lastUpload && (
+          <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
+            <p className="text-sm font-semibold text-neutral-700">
+              최근 업로드
+            </p>
+            <p className="mt-2 text-sm text-neutral-600">
+              {lastUpload.fileName} ·{" "}
+              {lastUpload.kind === "video" ? "동영상" : "CSV"} ·{" "}
+              {formatFileSize(lastUpload.size)}
+            </p>
+
+            {lastUpload.kind === "csv" && (
+              <p className="mt-2 text-sm text-neutral-500">
+                데이터 행 약 {lastUpload.dataRowCount ?? 0}개를 확인했습니다.
+              </p>
+            )}
+
+            {lastUpload.kind === "video" && lastUpload.url && (
+              <video
+                controls
+                className="mt-4 aspect-video w-full rounded-xl bg-black"
+                src={lastUpload.url}
+              >
+                브라우저가 동영상 재생을 지원하지 않습니다.
+              </video>
+            )}
+          </section>
+        )}
       </div>
     </div>
   );
