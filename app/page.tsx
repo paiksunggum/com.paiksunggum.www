@@ -27,7 +27,7 @@ const postureHighlights = [
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="flex min-h-screen flex-col bg-background text-foreground">
       <FeaturedMatchHero />
 
       <SportStoryRow />
@@ -35,8 +35,8 @@ export default function HomePage() {
       <SubscribedFavoritesRow />
 
       {/* Posture importance */}
-      <section className="border-t border-black bg-neutral-50 px-4 py-12 dark:border-neutral-100 dark:bg-neutral-900/30 md:py-16">
-        <div className="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950 lg:grid-cols-[0.95fr_1.05fr]">
+      <section className="border-t border-border bg-muted px-4 py-12 md:py-16">
+        <div className="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[260px] overflow-hidden lg:min-h-full">
             <Image
               src="/posture-runner.png"
@@ -49,22 +49,22 @@ export default function HomePage() {
           </div>
 
           <div className="px-6 py-8 sm:px-8 md:py-10">
-            <p className="text-sm font-semibold text-[#E10600]">
+            <p className="text-sm font-semibold text-primary">
               FORM MATTERS
             </p>
-            <h2 className="mt-2 text-3xl font-black tracking-tight text-neutral-950 dark:text-white sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
               The Importance of Form
             </h2>
             <div className="mt-6 space-y-4">
               {postureHighlights.map((item) => (
                 <div
                   key={item.title}
-                  className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-900/60"
+                  className="rounded-2xl border border-border bg-muted p-4"
                 >
-                  <h3 className="text-base font-bold text-neutral-950 dark:text-white">
+                  <h3 className="text-base font-bold text-foreground">
                     {item.title}
                   </h3>
-                  <p className="mt-1 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                     {item.description}
                   </p>
                 </div>
@@ -75,9 +75,9 @@ export default function HomePage() {
       </section>
 
       {/* Recent results */}
-      <section className="border-t border-black bg-white px-4 py-10 dark:border-neutral-100 dark:bg-neutral-950 md:py-14">
+      <section className="border-t border-border bg-background px-4 py-10 md:py-14">
         <div className="mx-auto max-w-5xl">
-          <p className="mb-6 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          <p className="mb-6 text-sm font-semibold text-foreground">
             주요 경기 결과
           </p>
           <ul className="grid gap-4 sm:grid-cols-2">
@@ -89,13 +89,13 @@ export default function HomePage() {
                 <li key={match.id}>
                   <Link
                     href={`/sports/${match.sportSlug}`}
-                    className="block overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-50 transition-shadow hover:shadow-md dark:border-neutral-800 dark:bg-neutral-900/40"
+                    className="block overflow-hidden rounded-2xl border border-border bg-muted transition-shadow hover:shadow-md"
                   >
-                    <div className="flex items-center justify-between border-b border-neutral-200 bg-neutral-100 px-4 py-2 dark:border-neutral-800 dark:bg-neutral-900">
-                      <span className="text-xs font-bold tracking-wider text-neutral-500">
+                    <div className="flex items-center justify-between border-b border-border bg-secondary px-4 py-2">
+                      <span className="text-xs font-bold tracking-wider text-muted-foreground">
                         {match.league}
                       </span>
-                      <span className="text-xs font-semibold text-[#E10600]">
+                      <span className="text-xs font-semibold text-primary">
                         {match.status}
                       </span>
                     </div>
@@ -112,12 +112,12 @@ export default function HomePage() {
                         </div>
                         <span className="text-sm font-bold">{match.home.abbr}</span>
                         <span
-                          className={`text-2xl font-black tabular-nums ${homeWon ? "text-neutral-900 dark:text-white" : "text-neutral-400"}`}
+                          className={`text-2xl font-black tabular-nums ${homeWon ? "text-foreground" : "text-muted-foreground"}`}
                         >
                           {match.home.score}
                         </span>
                       </div>
-                      <span className="text-xs font-semibold text-neutral-400">
+                      <span className="text-xs font-semibold text-muted-foreground">
                         VS
                       </span>
                       <div className="flex flex-col items-center gap-2 text-center">
@@ -132,13 +132,13 @@ export default function HomePage() {
                         </div>
                         <span className="text-sm font-bold">{match.away.abbr}</span>
                         <span
-                          className={`text-2xl font-black tabular-nums ${awayWon ? "text-neutral-900 dark:text-white" : "text-neutral-400"}`}
+                          className={`text-2xl font-black tabular-nums ${awayWon ? "text-foreground" : "text-muted-foreground"}`}
                         >
                           {match.away.score}
                         </span>
                       </div>
                     </div>
-                    <p className="border-t border-neutral-200 px-4 py-2 text-center text-xs text-neutral-500 dark:border-neutral-800">
+                    <p className="border-t border-border px-4 py-2 text-center text-xs text-muted-foreground">
                       {match.date}
                       {match.venue ? ` · ${match.venue}` : ""}
                     </p>
@@ -151,40 +151,40 @@ export default function HomePage() {
       </section>
 
       {/* Three columns — posture features */}
-      <section className="border-t border-black bg-neutral-50 px-4 py-12 dark:border-neutral-100 dark:bg-neutral-900/30 md:py-16">
+      <section className="border-t border-border bg-muted px-4 py-12 md:py-16">
         <div className="mx-auto grid max-w-5xl md:grid-cols-3">
-          <div className="border-b border-black px-5 py-8 text-center dark:border-neutral-100 md:border-b-0 md:border-r md:px-8 md:text-left">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#E10600] dark:border-neutral-700 dark:bg-neutral-950 md:mx-0">
+          <div className="border-b border-border px-5 py-8 text-center md:border-b-0 md:border-r md:px-8 md:text-left">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-card text-primary md:mx-0">
               <Target className="h-6 w-6" strokeWidth={1.5} aria-hidden />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
+            <h3 className="text-lg font-semibold text-foreground">
               종목별 자세 분석
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               NBA, EPL, NFL 등 주요 리그 종목별로 올바른 자세와 동작을
               확인하세요.
             </p>
           </div>
-          <div className="border-b border-black px-5 py-8 text-center dark:border-neutral-100 md:border-b-0 md:border-r md:px-8 md:text-left">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#E10600] dark:border-neutral-700 dark:bg-neutral-950 md:mx-0">
+          <div className="border-b border-border px-5 py-8 text-center md:border-b-0 md:border-r md:px-8 md:text-left">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-card text-primary md:mx-0">
               <Activity className="h-6 w-6" strokeWidth={1.5} aria-hidden />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
+            <h3 className="text-lg font-semibold text-foreground">
               경기 기반 가이드
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               실제 경기에서 자주 쓰이는 동작을 기준으로 자세 교정 포인트를
               제공합니다.
             </p>
           </div>
           <div className="px-5 py-8 text-center md:px-8 md:text-left">
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white text-[#E10600] dark:border-neutral-700 dark:bg-neutral-950 md:mx-0">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-card text-primary md:mx-0">
               <Trophy className="h-6 w-6" strokeWidth={1.5} aria-hidden />
             </div>
-            <h3 className="text-lg font-semibold text-neutral-900 dark:text-neutral-50">
+            <h3 className="text-lg font-semibold text-foreground">
               리그별 맞춤 콘텐츠
             </h3>
-            <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               상단 리그 로고를 눌러 해당 스포츠의 자세 가이드 페이지로
               바로 이동할 수 있습니다.
             </p>

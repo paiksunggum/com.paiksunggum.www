@@ -26,10 +26,10 @@ export default function SportTipProviders({
 
   return (
     <section className="mt-10">
-      <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-50">
+      <h2 className="text-xl font-semibold text-foreground">
         {sportName} 자세 팁 코치
       </h2>
-      <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+      <p className="mt-1 text-sm text-muted-foreground">
         마음에 드는 코치를 구독하면 메인 페이지 즐겨찾기에 추가됩니다.
       </p>
 
@@ -40,9 +40,9 @@ export default function SportTipProviders({
           return (
             <li
               key={provider.id}
-              className="flex gap-4 rounded-2xl border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-700 dark:bg-neutral-900/50"
+              className="flex gap-4 rounded-2xl border border-border bg-card p-4"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-red-600">
+              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-primary">
                 <Image
                   src={provider.avatarUrl}
                   alt={provider.name}
@@ -53,13 +53,13 @@ export default function SportTipProviders({
               </div>
 
               <div className="min-w-0 flex-1">
-                <p className="font-semibold text-neutral-900 dark:text-neutral-50">
+                <p className="font-semibold text-foreground">
                   {provider.name}
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-red-700 dark:text-red-400">
+                <p className="mt-0.5 text-sm font-medium text-primary">
                   {provider.specialty}
                 </p>
-                <p className="mt-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {provider.bio}
                 </p>
               </div>
@@ -71,7 +71,7 @@ export default function SportTipProviders({
                 className={cn(
                   "shrink-0 self-center gap-1.5",
                   subscribed &&
-                    "border-[#E10600] bg-[#E10600] text-white hover:bg-[#c40500] hover:text-white",
+                    "border-primary bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground",
                 )}
                 onClick={() => toggle(provider.id)}
                 aria-pressed={subscribed}

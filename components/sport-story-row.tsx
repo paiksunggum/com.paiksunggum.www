@@ -5,13 +5,13 @@ import { sports } from "@/lib/sports-data";
 
 export default function SportStoryRow() {
   return (
-    <section className="border-t border-black bg-white px-4 py-8 dark:border-neutral-100 dark:bg-neutral-950 md:py-10">
+    <section className="border-t border-border bg-background px-4 py-8 md:py-10">
       <div className="mx-auto max-w-5xl">
-        <p className="mb-4 text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+        <p className="mb-4 inline-flex rounded-xl border border-[#676783] bg-[#676783] px-3 py-1.5 text-sm font-semibold text-white">
           스포츠별 자세 가이드
         </p>
 
-        <div className="-mx-1 overflow-x-auto pb-2">
+        <div className="-mx-1 overflow-x-auto pb-2 scrollbar-simple-x">
           <ul className="flex min-w-min gap-4 px-1">
             {sports.map((sport) => (
               <li key={sport.slug} className="w-[88px] shrink-0 sm:w-[96px]">
@@ -21,7 +21,7 @@ export default function SportStoryRow() {
                   aria-label={`${sport.name} ${sport.league} 페이지로 이동`}
                 >
                   <div
-                    className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-full p-3 shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-offset-2 dark:ring-offset-neutral-950"
+                    className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-full p-3 shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-primary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background"
                     style={{ backgroundColor: sport.brandColor }}
                   >
                     <Image
@@ -33,10 +33,10 @@ export default function SportStoryRow() {
                     />
                   </div>
 
-                  <p className="truncate text-center text-xs font-medium text-neutral-800 dark:text-neutral-200">
+                  <p className="truncate text-center text-xs font-medium text-foreground">
                     {sport.name}
                   </p>
-                  <p className="truncate text-center text-[11px] text-neutral-500 dark:text-neutral-400">
+                  <p className="truncate text-center text-[11px] text-muted-foreground">
                     {sport.caption}
                   </p>
                 </Link>

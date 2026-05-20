@@ -99,20 +99,22 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
     const formData = new FormData(e.currentTarget);
     const formProps = Object.fromEntries(formData.entries());
 
-    const payload = {
-      userId: String(formProps.userId ?? ""),
-      password: String(formProps.password ?? ""),
-      email: String(formProps.email ?? ""),
-      name: String(formProps.name ?? ""),
-      birthdate: String(formProps.birthdate ?? ""),
-      gender: state.gender,
+    const userId = String(formProps.userId ?? "").trim();
+    const emailRaw = String(formProps.email ?? "").trim();
+    const name = String(formProps.name ?? "").trim();
+
+    const body = {
+      user_id: userId,
+      email: emailRaw || `${userId}@naver.com`,
+      name,
+      role: "user",
     };
 
     try {
-      const res = await fetch(`${getApiBase()}/signup`, {
+      const res = await fetch(`${getApiBase()}/forma/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {

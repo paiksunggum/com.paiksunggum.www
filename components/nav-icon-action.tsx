@@ -10,7 +10,7 @@ import {
 
 export function navActionClassName(isHome: boolean) {
   return isHome
-    ? "inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/25 bg-white/10 text-white transition-colors hover:bg-white/15"
+    ? "hero-readable-tight inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/25 bg-white/10 text-white transition-colors hover:bg-white/15"
     : "inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
 }
 

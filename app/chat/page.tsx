@@ -53,6 +53,30 @@ function parseApiError(raw: unknown, status: number): string {
 
 type SampleDataRow = Record<string, unknown>;
 
+type ChatUiState = {
+  geminiModel: string;
+  isLoading: boolean;
+  errorMessage: string | null;
+};
+
+const initialChatUiState: ChatUiState = {
+  geminiModel: "gemini-2.5-flash",
+  isLoading: false,
+  errorMessage: null,
+};
+
+type SampleDataState = {
+  data: SampleDataRow[];
+  isLoading: boolean;
+  errorMessage: string | null;
+};
+
+const initialSampleDataState: SampleDataState = {
+  data: [],
+  isLoading: false,
+  errorMessage: null,
+};
+
 /* ─────────────────────────────────────────────────────────────
    TitanicQAPage (Main View)
 ───────────────────────────────────────────────────────────── */
@@ -63,11 +87,13 @@ function TitanicQAPage({
 }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
-  const [geminiModel, setGeminiModel] = useState("gemini-2.5-flash");
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [ui, setUi] = useState<ChatUiState>(initialChatUiState);
   const lastQuestionRef = useRef<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const patchUi = (patch: Partial<ChatUiState>) => {
+    setUi((prev) => ({ ...prev, ...patch }));
+  };
 
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -78,8 +104,7 @@ function TitanicQAPage({
     if (!question.trim()) return;
 
     lastQuestionRef.current = question;
-    setErrorMessage(null);
-    setIsLoading(true);
+    patchUi({ errorMessage: null, isLoading: true });
 
     const userMessage: Message = {
       role: "user",
@@ -96,7 +121,7 @@ function TitanicQAPage({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: thread.map(({ role, text }) => ({ role, text })),
-          model: geminiModel,
+          model: ui.geminiModel,
         }),
       });
 
@@ -118,11 +143,12 @@ function TitanicQAPage({
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (err) {
-      setErrorMessage(
-        err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다."
-      );
+      patchUi({
+        errorMessage:
+          err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.",
+      });
     } finally {
-      setIsLoading(false);
+      patchUi({ isLoading: false });
     }
   };
 
@@ -216,7 +242,7 @@ function TitanicQAPage({
             </div>
           ))}
 
-          {isLoading && (
+          {ui.isLoading && (
             <div className="flex justify-start">
               <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3">
                 <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
@@ -229,11 +255,11 @@ function TitanicQAPage({
       </main>
 
       {/* Error */}
-      {errorMessage && (
+      {ui.errorMessage && (
         <div className="flex-shrink-0 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800 px-4 py-3">
           <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
             <p className="text-sm text-red-700 dark:text-red-400">
-              {errorMessage}
+              {ui.errorMessage}
             </p>
             <button
               type="button"
@@ -264,7 +290,7 @@ function TitanicQAPage({
             onKeyDown={handleKeyDown}
             placeholder="Gemini에게 물어보기"
             rows={3}
-            disabled={isLoading}
+            disabled={ui.isLoading}
             className="w-full min-h-[4.5rem] max-h-40 resize-none border-0 bg-transparent px-1 py-1 text-[15px] text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
           />
 
@@ -288,7 +314,11 @@ function TitanicQAPage({
             </div>
 
             <div className="flex items-center gap-1">
-              <Select value={geminiModel} onValueChange={setGeminiModel} disabled={isLoading}>
+              <Select
+                value={ui.geminiModel}
+                onValueChange={(geminiModel) => patchUi({ geminiModel })}
+                disabled={ui.isLoading}
+              >
                 <SelectTrigger
                   size="sm"
                   className="h-9 border-0 bg-transparent shadow-none hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full px-3 text-sm text-gray-800 dark:text-gray-100 gap-1"
@@ -303,11 +333,11 @@ function TitanicQAPage({
 
               <button
                 type="submit"
-                disabled={isLoading || !input.trim()}
+                disabled={ui.isLoading || !input.trim()}
                 aria-label="보내기"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white transition-colors"
               >
-                {isLoading ? (
+                {ui.isLoading ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <ArrowUp className="w-4 h-4" strokeWidth={2.25} />
@@ -337,13 +367,14 @@ function TitanicSampleDataPage({
 }: {
   onSwitchView: () => void;
 }) {
-  const [data, setData] = useState<SampleDataRow[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [state, setState] = useState<SampleDataState>(initialSampleDataState);
+
+  const patchState = (patch: Partial<SampleDataState>) => {
+    setState((prev) => ({ ...prev, ...patch }));
+  };
 
   const fetchData = async () => {
-    setIsLoading(true);
-    setErrorMessage(null);
+    patchState({ isLoading: true, errorMessage: null });
 
     try {
       const res = await fetch(`${getApiBase()}/titanic/data`);
@@ -351,13 +382,14 @@ function TitanicSampleDataPage({
         throw new Error(`서버 오류: ${res.status}`);
       }
       const json: SampleDataRow[] = await res.json();
-      setData(json);
+      patchState({ data: json });
     } catch (err) {
-      setErrorMessage(
-        err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다."
-      );
+      patchState({
+        errorMessage:
+          err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다.",
+      });
     } finally {
-      setIsLoading(false);
+      patchState({ isLoading: false });
     }
   };
 
@@ -393,16 +425,16 @@ function TitanicSampleDataPage({
       {/* Content */}
       <main className="flex-1 overflow-y-auto px-4 py-4 bg-gray-50 dark:bg-gray-950">
         <div className="max-w-lg mx-auto space-y-4">
-          {isLoading && (
+          {state.isLoading && (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
             </div>
           )}
 
-          {errorMessage && (
+          {state.errorMessage && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl px-4 py-3">
               <p className="text-sm text-red-700 dark:text-red-400 mb-2">
-                {errorMessage}
+                {state.errorMessage}
               </p>
               <button
                 type="button"
@@ -416,16 +448,16 @@ function TitanicSampleDataPage({
             </div>
           )}
 
-          {!isLoading && !errorMessage && data.length === 0 && (
+          {!state.isLoading && !state.errorMessage && state.data.length === 0 && (
             <div className="text-center py-12 text-gray-400 dark:text-gray-500">
               <Database className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>데이터가 없습니다</p>
             </div>
           )}
 
-          {!isLoading &&
-            !errorMessage &&
-            data.map((row, idx) => (
+          {!state.isLoading &&
+            !state.errorMessage &&
+            state.data.map((row, idx) => (
               <div
                 key={idx}
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-4"

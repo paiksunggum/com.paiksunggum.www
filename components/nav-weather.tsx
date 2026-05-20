@@ -62,7 +62,7 @@ export default function NavWeather({ isHome }: NavWeatherProps) {
   }, []);
 
   const shell = isHome
-    ? "border-white/20 bg-white/10 text-white"
+    ? "hero-readable-tight border-white/20 bg-white/10 text-white"
     : "border-border bg-muted/50 text-foreground";
 
   if (loading) {

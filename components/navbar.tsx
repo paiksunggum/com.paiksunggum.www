@@ -64,7 +64,7 @@ export default function Navbar() {
     <nav
       className={
         isHome
-          ? "absolute top-0 left-0 z-50 w-full border-b border-white/10 bg-gradient-to-b from-black/55 via-black/25 to-transparent backdrop-blur-[2px]"
+          ? "absolute top-0 left-0 z-50 w-full border-b border-white/10 bg-gradient-to-b from-[var(--hero-nav-from)] via-[var(--hero-nav-via)] to-transparent backdrop-blur-[2px]"
           : "w-full border-b border-border bg-background"
       }
       aria-label="메인 네비게이션"
@@ -79,7 +79,7 @@ export default function Navbar() {
                 : "shrink-0 transition-opacity hover:opacity-80"
             }
           >
-            <FormaLogo />
+            <FormaLogo className={isHome ? "hero-readable-tight !text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]" : undefined} />
           </Link>
           <NavWeather isHome={isHome} />
         </div>

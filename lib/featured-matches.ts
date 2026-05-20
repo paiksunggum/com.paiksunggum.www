@@ -30,7 +30,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "TOR",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/3/36/Toronto_Raptors_logo.svg",
-      color: "#1a1a1a",
+      color: "#716d8f",
       score: 104,
     },
     away: {

@@ -23,11 +23,11 @@ export default async function SportPage({ params }: SportPageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-white px-4 py-10 text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100">
+    <div className="min-h-screen bg-background px-4 py-10 text-foreground">
       <div className="mx-auto max-w-3xl">
         <Link
           href="/"
-          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-neutral-600 transition-colors hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+          className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden />
           홈으로
@@ -47,17 +47,17 @@ export default async function SportPage({ params }: SportPageProps) {
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-red-700 dark:text-red-400">
+            <p className="text-sm font-semibold text-primary">
               {sport.league}
             </p>
             <h1 className="text-3xl font-bold tracking-tight">{sport.name}</h1>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+            <p className="mt-1 text-sm text-muted-foreground">
               {sport.caption}
             </p>
           </div>
         </div>
 
-        <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-neutral-200 dark:border-neutral-700">
+        <div className="relative mt-8 aspect-[16/9] overflow-hidden rounded-2xl border border-border">
           <Image
             src={sport.image}
             alt={sport.imageAlt}
@@ -70,8 +70,8 @@ export default async function SportPage({ params }: SportPageProps) {
 
         <SportTipProviders sportSlug={sport.slug} sportName={sport.name} />
 
-        <article className="mt-8 space-y-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
-          <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-50">
+        <article className="mt-8 space-y-4 leading-relaxed text-muted-foreground">
+          <h2 className="text-xl font-semibold text-foreground">
             {sport.name} 자세 가이드
           </h2>
           <p>

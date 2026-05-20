@@ -61,12 +61,26 @@ async function postFile(file: File) {
   return data;
 }
 
+type UploadUiState = {
+  uploading: boolean;
+  dragOver: boolean;
+  lastUpload: UploadResult | null;
+};
+
+const initialUploadUiState: UploadUiState = {
+  uploading: false,
+  dragOver: false,
+  lastUpload: null,
+};
+
 export default function TitanicHomePage() {
-  const [uploading, setUploading] = React.useState(false);
-  const [dragOver, setDragOver] = React.useState(false);
-  const [lastUpload, setLastUpload] = React.useState<UploadResult | null>(null);
+  const [state, setState] = React.useState<UploadUiState>(initialUploadUiState);
   const panelInputRef = React.useRef<HTMLInputElement>(null);
   const buttonInputRef = React.useRef<HTMLInputElement>(null);
+
+  const patchState = (patch: Partial<UploadUiState>) => {
+    setState((prev) => ({ ...prev, ...patch }));
+  };
 
   const runUpload = React.useCallback(async (file: File | undefined) => {
     if (!file) return;
@@ -77,10 +91,10 @@ export default function TitanicHomePage() {
       return;
     }
 
-    setUploading(true);
+    patchState({ uploading: true });
     try {
       const data = await postFile(file);
-      setLastUpload(data);
+      patchState({ lastUpload: data });
       try {
         sessionStorage.setItem(
           "lastFileUpload",
@@ -105,7 +119,7 @@ export default function TitanicHomePage() {
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "업로드에 실패했습니다.");
     } finally {
-      setUploading(false);
+      patchState({ uploading: false });
     }
   }, []);
 
@@ -123,8 +137,8 @@ export default function TitanicHomePage() {
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
-    setDragOver(false);
-    if (uploading) return;
+    patchState({ dragOver: false });
+    if (state.uploading) return;
     const f = e.dataTransfer.files[0];
     if (!f) return;
     if (!getAcceptedKind(f)) {
@@ -161,7 +175,7 @@ export default function TitanicHomePage() {
             className="sr-only"
             tabIndex={-1}
             aria-hidden
-            disabled={uploading}
+            disabled={state.uploading}
             onChange={onPanelFileChange}
           />
           <div
@@ -171,24 +185,24 @@ export default function TitanicHomePage() {
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                if (!uploading) panelInputRef.current?.click();
+                if (!state.uploading) panelInputRef.current?.click();
               }
             }}
             onClick={() => {
-              if (!uploading) panelInputRef.current?.click();
+              if (!state.uploading) panelInputRef.current?.click();
             }}
             onDragOver={(e) => {
               e.preventDefault();
-              if (!uploading) setDragOver(true);
+              if (!state.uploading) patchState({ dragOver: true });
             }}
-            onDragLeave={() => setDragOver(false)}
+            onDragLeave={() => patchState({ dragOver: false })}
             onDrop={onDrop}
             className={cn(
               "cursor-pointer rounded-2xl border-2 border-dashed p-10 text-center transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-              dragOver
+              state.dragOver
                 ? "border-primary bg-primary/5"
                 : "border-neutral-300 bg-neutral-50/80 hover:border-neutral-400 hover:bg-neutral-50",
-              uploading && "pointer-events-none opacity-60",
+              state.uploading && "pointer-events-none opacity-60",
             )}
           >
             <Upload
@@ -230,46 +244,46 @@ export default function TitanicHomePage() {
             className="sr-only"
             tabIndex={-1}
             aria-hidden
-            disabled={uploading}
+            disabled={state.uploading}
             onChange={onButtonFileChange}
           />
           <Button
             type="button"
             size="lg"
-            disabled={uploading}
+            disabled={state.uploading}
             className="gap-2"
             onClick={() => buttonInputRef.current?.click()}
           >
             <FileUp className="h-5 w-5" aria-hidden />
-            {uploading ? "업로드 중…" : "파일 선택하여 업로드"}
+            {state.uploading ? "업로드 중…" : "파일 선택하여 업로드"}
           </Button>
           <p className="text-center text-xs text-neutral-500">
             버튼을 누르면 탐색기가 열리고, 선택 즉시 서버로 전송됩니다.
           </p>
         </section>
 
-        {lastUpload && (
+        {state.lastUpload && (
           <section className="rounded-2xl border border-neutral-200 bg-neutral-50 p-5">
             <p className="text-sm font-semibold text-neutral-700">
               최근 업로드
             </p>
             <p className="mt-2 text-sm text-neutral-600">
-              {lastUpload.fileName} ·{" "}
-              {lastUpload.kind === "video" ? "동영상" : "CSV"} ·{" "}
-              {formatFileSize(lastUpload.size)}
+              {state.lastUpload.fileName} ·{" "}
+              {state.lastUpload.kind === "video" ? "동영상" : "CSV"} ·{" "}
+              {formatFileSize(state.lastUpload.size)}
             </p>
 
-            {lastUpload.kind === "csv" && (
+            {state.lastUpload.kind === "csv" && (
               <p className="mt-2 text-sm text-neutral-500">
-                데이터 행 약 {lastUpload.dataRowCount ?? 0}개를 확인했습니다.
+                데이터 행 약 {state.lastUpload.dataRowCount ?? 0}개를 확인했습니다.
               </p>
             )}
 
-            {lastUpload.kind === "video" && lastUpload.url && (
+            {state.lastUpload.kind === "video" && state.lastUpload.url && (
               <video
                 controls
                 className="mt-4 aspect-video w-full rounded-xl bg-black"
-                src={lastUpload.url}
+                src={state.lastUpload.url}
               >
                 브라우저가 동영상 재생을 지원하지 않습니다.
               </video>
