@@ -3,6 +3,8 @@ export type SportItem = {
   name: string;
   league: string;
   leagueLogo: string;
+  /** League brand color for circular icon backgrounds */
+  brandColor: string;
   image: string;
   imageAlt: string;
   caption: string;
@@ -13,6 +15,7 @@ export const sports: SportItem[] = [
     slug: "basketball",
     name: "농구",
     league: "NBA",
+    brandColor: "#1D428A",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/en/0/03/National_Basketball_Association_logo.svg",
     image:
@@ -24,6 +27,7 @@ export const sports: SportItem[] = [
     slug: "baseball",
     name: "야구",
     league: "MLB",
+    brandColor: "#041E42",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/commons/a/a6/Major_League_Baseball_logo.svg",
     image:
@@ -35,6 +39,7 @@ export const sports: SportItem[] = [
     slug: "football",
     name: "미식축구",
     league: "NFL",
+    brandColor: "#013369",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/en/a/a2/National_Football_League_logo.svg",
     image:
@@ -46,6 +51,7 @@ export const sports: SportItem[] = [
     slug: "soccer",
     name: "축구",
     league: "EPL",
+    brandColor: "#FF2882",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/en/f/f2/Premier_League_Logo.svg",
     image:
@@ -57,6 +63,7 @@ export const sports: SportItem[] = [
     slug: "hockey",
     name: "아이스하키",
     league: "NHL",
+    brandColor: "#000000",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/en/3/3a/05_NHL_Shield.svg",
     image:
@@ -68,6 +75,7 @@ export const sports: SportItem[] = [
     slug: "tennis",
     name: "테니스",
     league: "ATP",
+    brandColor: "#003F6C",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/en/3/3f/ATP_Tour_logo.svg",
     image:
@@ -79,6 +87,7 @@ export const sports: SportItem[] = [
     slug: "cricket",
     name: "크리켓",
     league: "IPL",
+    brandColor: "#F5A623",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/commons/5/52/Ipl.svg",
     image:
@@ -90,6 +99,7 @@ export const sports: SportItem[] = [
     slug: "volleyball",
     name: "배구",
     league: "FIVB",
+    brandColor: "#001E42",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/commons/a/ae/F%C3%A9d%C3%A9ration_Internationale_de_Volleyball_logo.svg",
     image:
@@ -101,6 +111,7 @@ export const sports: SportItem[] = [
     slug: "table-tennis",
     name: "탁구",
     league: "ITTF",
+    brandColor: "#00A651",
     leagueLogo:
       "https://upload.wikimedia.org/wikipedia/commons/7/7b/Logo_of_ITTF.svg",
     image:

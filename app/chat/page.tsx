@@ -18,12 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-/* ─────────────────────────────────────────────────────────────
-   API Base URL
-───────────────────────────────────────────────────────────── */
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+import { getApiBase } from "@/lib/api-base";
 
 /* ─────────────────────────────────────────────────────────────
    Types
@@ -96,7 +91,7 @@ function TitanicQAPage({
     setInput("");
 
     try {
-      const res = await fetch(`${apiBaseUrl}/chat`, {
+      const res = await fetch(`${getApiBase()}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -351,7 +346,7 @@ function TitanicSampleDataPage({
     setErrorMessage(null);
 
     try {
-      const res = await fetch(`${apiBaseUrl}/titanic/data`);
+      const res = await fetch(`${getApiBase()}/titanic/data`);
       if (!res.ok) {
         throw new Error(`서버 오류: ${res.status}`);
       }

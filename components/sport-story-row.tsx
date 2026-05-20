@@ -20,12 +20,15 @@ export default function SportStoryRow() {
                   className="group flex flex-col items-center gap-2 focus-visible:outline-none"
                   aria-label={`${sport.name} ${sport.league} 페이지로 이동`}
                 >
-                  <div className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-red-600 bg-white p-2 shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-red-600 group-focus-visible:ring-offset-2 dark:bg-neutral-900 dark:ring-offset-neutral-950">
+                  <div
+                    className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-full p-3 shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-offset-2 dark:ring-offset-neutral-950"
+                    style={{ backgroundColor: sport.brandColor }}
+                  >
                     <Image
                       src={sport.leagueLogo}
                       alt={`${sport.league} 로고`}
-                      width={52}
-                      height={52}
+                      width={48}
+                      height={48}
                       className="h-full w-full object-contain"
                     />
                   </div>

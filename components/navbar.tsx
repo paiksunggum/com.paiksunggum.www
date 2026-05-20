@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogIn } from "lucide-react";
+import { LogIn, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +20,8 @@ import { Label } from "@/components/ui/label";
 import NavWeather from "@/components/nav-weather";
 import SignupDialog from "@/components/signup-dialog";
 import FormaLogo from "@/components/forma-logo";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+import { NavTooltip, navActionClassName } from "@/components/nav-icon-action";
+import { getApiBase } from "@/lib/api-base";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -36,7 +36,7 @@ export default function Navbar() {
     const password = String(data.get("password") ?? "");
 
     try {
-      const res = await fetch(`${API_BASE}/login`, {
+      const res = await fetch(`${getApiBase()}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: email, password }),
@@ -85,33 +85,29 @@ export default function Navbar() {
         </div>
 
         {/* Right side */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/titanic"
-            className={
-              isHome
-                ? "inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
-                : "inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-            }
-          >
-            파일 올리기
-          </Link>
+        <div className="flex items-center gap-1.5">
+          <NavTooltip label="파일 올리기">
+            <Link
+              href="/titanic"
+              className={navActionClassName(isHome)}
+              aria-label="파일 올리기"
+            >
+              <Upload className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          </NavTooltip>
           <SignupDialog isHome={isHome} />
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <button
-                type="button"
-                className={
-                  isHome
-                    ? "inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
-                    : "inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
-                }
-                aria-label="로그인"
-              >
-                <LogIn className="h-4 w-4" aria-hidden="true" />
-                로그인
-              </button>
-            </DialogTrigger>
+            <NavTooltip label="로그인">
+              <DialogTrigger asChild>
+                <button
+                  type="button"
+                  className={navActionClassName(isHome)}
+                  aria-label="로그인"
+                >
+                  <LogIn className="h-4 w-4 shrink-0" aria-hidden="true" />
+                </button>
+              </DialogTrigger>
+            </NavTooltip>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>로그인</DialogTitle>

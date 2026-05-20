@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
+import SportTipProviders from "@/components/sport-tip-providers";
 import { getSportBySlug, sports } from "@/lib/sports-data";
 
 type SportPageProps = {
@@ -33,12 +34,15 @@ export default async function SportPage({ params }: SportPageProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-red-600 bg-white p-3 dark:bg-neutral-900">
+          <div
+            className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full p-3.5 shadow-sm"
+            style={{ backgroundColor: sport.brandColor }}
+          >
             <Image
               src={sport.leagueLogo}
               alt={`${sport.league} 로고`}
-              width={64}
-              height={64}
+              width={56}
+              height={56}
               className="h-full w-full object-contain"
             />
           </div>
@@ -63,6 +67,8 @@ export default async function SportPage({ params }: SportPageProps) {
             priority
           />
         </div>
+
+        <SportTipProviders sportSlug={sport.slug} sportName={sport.name} />
 
         <article className="mt-8 space-y-4 leading-relaxed text-neutral-700 dark:text-neutral-300">
           <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-50">

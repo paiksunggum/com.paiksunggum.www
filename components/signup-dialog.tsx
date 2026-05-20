@@ -13,7 +13,9 @@ import {
   UserPlus,
 } from "lucide-react";
 
+import { getApiBase } from "@/lib/api-base";
 import { cn } from "@/lib/utils";
+import { NavTooltip, navActionClassName } from "@/components/nav-icon-action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,12 +25,6 @@ import {
 } from "@/components/ui/dialog";
 
 type Gender = "male" | "female" | "none";
-
-const genderLabels: Record<Gender, string> = {
-  male: "남자",
-  female: "여자",
-  none: "선택안함",
-};
 
 function FieldRow({
   icon: Icon,
@@ -72,41 +68,48 @@ function Section({
 const fieldInputClass =
   "h-10 w-full min-w-0 border-0 bg-transparent p-0 text-[15px] text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 focus-visible:ring-0";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
-
 type SignupDialogProps = {
   isHome: boolean;
 };
 
+type SignupState = {
+  open: boolean;
+  showPassword: boolean;
+  gender: Gender | null;
+};
+
+const initialSignupState: SignupState = {
+  open: false,
+  showPassword: false,
+  gender: null,
+};
+
 export default function SignupDialog({ isHome }: SignupDialogProps) {
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [gender, setGender] = React.useState<Gender | null>(null);
+  const [state, setState] = React.useState<SignupState>(initialSignupState);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const patchState = (patch: Partial<SignupState>) => {
+    setState((prev) => ({ ...prev, ...patch }));
+  };
+
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!gender) return;
+    if (!state.gender) return;
 
-    const form = e.currentTarget;
-    const data = new FormData(form);
-    const userId = String(data.get("userId") ?? "");
-    const password = String(data.get("password") ?? "");
-    const email = String(data.get("email") ?? "");
-    const name = String(data.get("name") ?? "");
-    const birthdate = String(data.get("birthdate") ?? "");
+    const formData = new FormData(e.currentTarget);
+    const formProps = Object.fromEntries(formData.entries());
 
     const payload = {
-      userId,
-      password,
-      email,
-      name,
-      birthdate,
-      gender,
+      userId: String(formProps.userId ?? ""),
+      password: String(formProps.password ?? ""),
+      email: String(formProps.email ?? ""),
+      name: String(formProps.name ?? ""),
+      birthdate: String(formProps.birthdate ?? ""),
+      gender: state.gender,
     };
 
     try {
-      const res = await fetch(`${API_BASE}/signup`, {
+      const res = await fetch(`${getApiBase()}/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -125,39 +128,38 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
         throw new Error(message);
       }
 
-      alert(
-        [
-          `아이디: ${userId}@naver.com`,
-          `비밀번호: ${password}`,
-          `이메일: ${email || "(미입력)"}`,
-          `이름: ${name}`,
-          `생년월일: ${birthdate}`,
-          `성별: ${genderLabels[gender]}`,
-        ].join("\n"),
-      );
-
-      setOpen(false);
+      patchState({ open: false });
       router.push("/");
     } catch (err) {
-      alert(err instanceof Error ? err.message : "회원가입 요청에 실패했습니다.");
+      const raw =
+        err instanceof Error ? err.message : "회원가입 요청에 실패했습니다.";
+      const message =
+        raw === "Failed to fetch"
+          ? "서버에 연결할 수 없습니다. 백엔드(포트 8000)가 실행 중인지 확인해 주세요."
+          : raw;
+      alert(message);
     }
   }
 
-  const triggerClass = isHome
-    ? "inline-flex items-center gap-2 rounded-lg border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/15 transition-colors"
-    : "inline-flex items-center gap-2 rounded-lg border border-border bg-background px-4 py-2 text-sm font-medium text-foreground hover:bg-accent hover:text-accent-foreground transition-colors";
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button type="button" className={triggerClass} aria-label="회원가입">
-          <UserPlus className="h-4 w-4" aria-hidden />
-          회원가입
-        </button>
-      </DialogTrigger>
+    <Dialog
+      open={state.open}
+      onOpenChange={(open) => patchState({ open })}
+    >
+      <NavTooltip label="회원가입">
+        <DialogTrigger asChild>
+          <button
+            type="button"
+            className={navActionClassName(isHome)}
+            aria-label="회원가입"
+          >
+            <UserPlus className="h-4 w-4 shrink-0" aria-hidden />
+          </button>
+        </DialogTrigger>
+      </NavTooltip>
       <DialogContent className="max-h-[90vh] overflow-y-auto border-0 bg-neutral-50 p-0 sm:max-w-[460px]">
         <DialogTitle className="sr-only">회원가입</DialogTitle>
-        <form onSubmit={handleSubmit} className="px-5 pb-6 pt-5">
+        <form onSubmit={handleSignup} className="px-5 pb-6 pt-5">
           <div className="mb-4 flex items-center justify-end gap-1 text-xs text-neutral-500">
             <CheckCircle2 className="h-3.5 w-3.5 text-[#9a8550]" aria-hidden />
             실명 인증된 아이디로 가입
@@ -184,10 +186,14 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
                 <button
                   type="button"
                   className="shrink-0 text-neutral-400 hover:text-neutral-600"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
+                  onClick={() =>
+                    patchState({ showPassword: !state.showPassword })
+                  }
+                  aria-label={
+                    state.showPassword ? "비밀번호 숨기기" : "비밀번호 보기"
+                  }
                 >
-                  {showPassword ? (
+                  {state.showPassword ? (
                     <EyeOff className="h-5 w-5" />
                   ) : (
                     <Eye className="h-5 w-5" />
@@ -198,7 +204,7 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
               <input
                 id="signup-password"
                 name="password"
-                type={showPassword ? "text" : "password"}
+                type={state.showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 placeholder="비밀번호"
                 className={fieldInputClass}
@@ -258,10 +264,10 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
                 <button
                   key={value}
                   type="button"
-                  onClick={() => setGender(value)}
+                  onClick={() => patchState({ gender: value })}
                   className={cn(
                     "flex h-[52px] flex-1 items-center justify-center border-r border-neutral-200 text-[15px] transition-colors last:border-r-0",
-                    gender === value
+                    state.gender === value
                       ? "bg-[#d4c5a9]/25 font-medium text-neutral-900"
                       : "bg-white text-neutral-600 hover:bg-neutral-50",
                   )}
@@ -275,7 +281,7 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
           <Button
             type="submit"
             className="mt-6 h-[52px] w-full rounded-md text-[17px] font-semibold"
-            disabled={!gender}
+            disabled={!state.gender}
           >
             회원가입 완료
           </Button>

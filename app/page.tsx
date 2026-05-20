@@ -4,6 +4,7 @@ import { Activity, Target, Trophy } from "lucide-react";
 
 import FeaturedMatchHero from "@/components/featured-match-hero";
 import SportStoryRow from "@/components/sport-story-row";
+import SubscribedFavoritesRow from "@/components/subscribed-favorites-row";
 import { featuredMatches } from "@/lib/featured-matches";
 
 const postureHighlights = [
@@ -30,6 +31,8 @@ export default function HomePage() {
       <FeaturedMatchHero />
 
       <SportStoryRow />
+
+      <SubscribedFavoritesRow />
 
       {/* Posture importance */}
       <section className="border-t border-black bg-neutral-50 px-4 py-12 dark:border-neutral-100 dark:bg-neutral-900/30 md:py-16">

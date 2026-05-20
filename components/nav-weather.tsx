@@ -3,8 +3,7 @@
 import * as React from "react";
 import { Cloud } from "lucide-react";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+import { getApiBase } from "@/lib/api-base";
 
 type WeatherData = {
   city: string;
@@ -35,7 +34,7 @@ export default function NavWeather({ isHome }: NavWeatherProps) {
 
       try {
         const res = await fetch(
-          `${API_BASE}/weather/current?${params.toString()}`
+          `${getApiBase()}/weather/current?${params.toString()}`
         );
         if (!res.ok) return;
         const data = (await res.json()) as WeatherData;
