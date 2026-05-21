@@ -1,15 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect, FormEvent, KeyboardEvent } from "react";
+import { Lora } from "next/font/google";
+
+const chatSerif = Lora({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
 import {
   Loader2,
   RefreshCw,
   Database,
   MessageCircle,
-  Plus,
-  SlidersHorizontal,
-  Mic,
   ArrowUp,
+  Menu,
 } from "lucide-react";
 import {
   Select,
@@ -180,73 +184,119 @@ function TitanicQAPage({
     });
   };
 
+  const piCream = "#FAF3EB";
+  const piGreen = "#0D3D2E";
+
   return (
-    <div className="flex flex-col h-full">
-      {/* Header */}
-      <header className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
-              Titanic QA Assistant
-            </h1>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-              Google Gemini와 대화
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={onSwitchView}
-            aria-label="샘플 데이터 보기"
-            className="inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+    <div
+      className="flex h-full flex-col"
+      style={{ backgroundColor: piCream, color: piGreen }}
+    >
+      {/* Pi-style header */}
+      <header className="relative flex-shrink-0 px-4 pb-2 pt-3">
+        <button
+          type="button"
+          onClick={onSwitchView}
+          aria-label="샘플 데이터 보기"
+          className="absolute left-4 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-[#0D3D2E] shadow-sm transition-colors hover:bg-white"
+        >
+          <Menu className="h-4 w-4" strokeWidth={2} />
+        </button>
+
+        <div className="flex flex-col items-center gap-0.5 px-12">
+          <h1 className="text-[15px] font-medium tracking-tight text-[#0D3D2E]">
+            AI Chat
+          </h1>
+          <Select
+            value={ui.geminiModel}
+            onValueChange={(geminiModel) => patchUi({ geminiModel })}
+            disabled={ui.isLoading}
           >
-            <Database className="w-4 h-4" />
-            샘플 데이터
-          </button>
+            <SelectTrigger
+              size="sm"
+              className="h-7 border-0 bg-transparent px-2 text-xs text-[#5A7A6E] shadow-none hover:bg-white/50 rounded-full"
+            >
+              <SelectValue placeholder="모델" />
+            </SelectTrigger>
+            <SelectContent align="center">
+              <SelectItem value="gemini-2.5-flash">빠른 모델</SelectItem>
+              <SelectItem value="gemini-1.5-pro">고급 모델</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
+
+        <button
+          type="button"
+          onClick={onSwitchView}
+          aria-label="샘플 데이터"
+          className="absolute right-4 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/70 text-[#0D3D2E] shadow-sm transition-colors hover:bg-white"
+        >
+          <Database className="h-4 w-4" strokeWidth={2} />
+        </button>
       </header>
 
       {/* Messages */}
-      <main className="flex-1 overflow-y-auto px-4 py-4 bg-gray-50 dark:bg-gray-950">
-        <div className="max-w-2xl mx-auto space-y-4">
+      <main className="flex-1 overflow-y-auto px-5 py-6">
+        <div className="mx-auto max-w-xl space-y-3">
           {messages.length === 0 && (
-            <div className="text-center py-12 text-gray-400 dark:text-gray-500">
-              <MessageCircle className="w-12 h-12 mx-auto mb-3 opacity-50" />
-              <p>Gemini에게 무엇이든 물어보세요</p>
+            <div className="flex min-h-[50vh] items-center justify-center">
+              <p
+                className={`${chatSerif.className} text-center text-[17px] leading-relaxed text-[#0D3D2E]`}
+              >
+                안녕하세요!
+              </p>
             </div>
           )}
 
-          {messages.map((msg, idx) => (
-            <div
-              key={`${msg.ts}-${idx}`}
-              className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-            >
+          {messages.map((msg, idx) => {
+            const isUser = msg.role === "user";
+            return (
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 ${
-                  msg.role === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700"
+                key={`${msg.ts}-${idx}`}
+                className={`flex flex-col gap-1.5 ${
+                  isUser ? "items-end" : "items-start"
                 }`}
               >
-                <p className="whitespace-pre-wrap break-words">{msg.text}</p>
-
-                <p
-                  className={`text-xs mt-1 ${
-                    msg.role === "user"
-                      ? "text-blue-200"
-                      : "text-gray-400 dark:text-gray-500"
-                  }`}
+                <span
+                  className="text-[11px] font-medium uppercase tracking-wider text-[#5A7A6E]"
+                  style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  {formatTime(msg.ts)}
-                </p>
+                  {isUser ? "나" : "Gemini"}
+                </span>
+
+                {isUser ? (
+                  <div className="max-w-[88%] rounded-3xl rounded-br-md border border-[#0D3D2E]/12 bg-white px-4 py-3 shadow-sm">
+                    <p
+                      className={`${chatSerif.className} text-[16px] leading-relaxed text-[#0D3D2E] whitespace-pre-wrap break-words`}
+                    >
+                      {msg.text}
+                    </p>
+                    <p className="mt-2 text-right text-[11px] text-[#5A7A6E]">
+                      {formatTime(msg.ts)}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="max-w-[88%] rounded-3xl rounded-bl-md border border-[#0D3D2E]/12 bg-white px-4 py-3 shadow-sm">
+                    <p
+                      className={`${chatSerif.className} text-[16px] leading-relaxed text-[#0D3D2E] whitespace-pre-wrap break-words`}
+                    >
+                      {msg.text}
+                    </p>
+                    <p className="mt-2 text-[11px] text-[#5A7A6E]">
+                      {formatTime(msg.ts)}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {ui.isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl px-4 py-3">
-                <Loader2 className="w-5 h-5 animate-spin text-gray-400" />
-              </div>
+            <div className="flex flex-col items-start gap-1.5">
+              <span className="text-[11px] font-medium uppercase tracking-wider text-[#5A7A6E]">
+                Gemini
+              </span>
+              <Loader2 className="h-5 w-5 animate-spin text-[#5A7A6E]" />
             </div>
           )}
 
@@ -256,102 +306,55 @@ function TitanicQAPage({
 
       {/* Error */}
       {ui.errorMessage && (
-        <div className="flex-shrink-0 bg-red-50 dark:bg-red-900/20 border-t border-red-200 dark:border-red-800 px-4 py-3">
-          <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
-            <p className="text-sm text-red-700 dark:text-red-400">
-              {ui.errorMessage}
-            </p>
+        <div className="flex-shrink-0 border-t border-[#0D3D2E]/10 bg-[#F5E8DC] px-4 py-3">
+          <div className="mx-auto flex max-w-xl items-center justify-between gap-3">
+            <p className="text-sm text-[#8B3A3A]">{ui.errorMessage}</p>
             <button
               type="button"
               onClick={handleRetry}
               aria-label="재시도"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-red-700 dark:text-red-400 bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 transition-colors"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#8B3A3A]/30 bg-white px-3 py-1.5 text-sm font-medium text-[#8B3A3A] transition-colors hover:bg-[#FAF3EB]"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="h-4 w-4" />
               재시도
             </button>
           </div>
         </div>
       )}
 
-      {/* Gemini-style composer */}
-      <footer className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-950 px-4 pt-2 pb-4">
+      {/* Pi-style composer */}
+      <footer className="flex-shrink-0 px-4 pb-5 pt-2">
         <form
           onSubmit={handleSubmit}
-          className="max-w-2xl mx-auto rounded-[2rem] border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm px-4 pt-3 pb-3 flex flex-col gap-1"
+          className="mx-auto flex max-w-xl items-end gap-2"
         >
           <label htmlFor="gemini-input" className="sr-only">
-            Gemini에게 물어보기
+            메시지 입력
           </label>
-          <textarea
-            id="gemini-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Gemini에게 물어보기"
-            rows={3}
-            disabled={ui.isLoading}
-            className="w-full min-h-[4.5rem] max-h-40 resize-none border-0 bg-transparent px-1 py-1 text-[15px] text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-
-          <div className="flex items-center justify-between gap-2 mt-2">
-            <div className="flex items-center gap-0.5">
-              <button
-                type="button"
-                aria-label="첨부 (준비 중)"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <Plus className="w-5 h-5" strokeWidth={1.75} />
-              </button>
-              <button
-                type="button"
-                aria-label="도구 (준비 중)"
-                className="inline-flex h-10 items-center gap-1.5 rounded-full px-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <SlidersHorizontal className="w-4 h-4" strokeWidth={1.75} />
-                도구
-              </button>
-            </div>
-
-            <div className="flex items-center gap-1">
-              <Select
-                value={ui.geminiModel}
-                onValueChange={(geminiModel) => patchUi({ geminiModel })}
-                disabled={ui.isLoading}
-              >
-                <SelectTrigger
-                  size="sm"
-                  className="h-9 border-0 bg-transparent shadow-none hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full px-3 text-sm text-gray-800 dark:text-gray-100 gap-1"
-                >
-                  <SelectValue placeholder="모델" />
-                </SelectTrigger>
-                <SelectContent align="end">
-                  <SelectItem value="gemini-2.5-flash">빠른 모델</SelectItem>
-                  <SelectItem value="gemini-1.5-pro">고급 모델</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <button
-                type="submit"
-                disabled={ui.isLoading || !input.trim()}
-                aria-label="보내기"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-white transition-colors"
-              >
-                {ui.isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <ArrowUp className="w-4 h-4" strokeWidth={2.25} />
-                )}
-              </button>
-
-              <button
-                type="button"
-                aria-label="음성 입력 (준비 중)"
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <Mic className="w-5 h-5" strokeWidth={1.75} />
-              </button>
-            </div>
+          <div className="relative min-w-0 flex-1">
+            <textarea
+              id="gemini-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="무엇이든 물어보세요"
+              rows={1}
+              disabled={ui.isLoading}
+              className="max-h-32 min-h-[48px] w-full resize-none rounded-full border-0 bg-white py-3.5 pl-5 pr-14 text-[15px] text-[#0D3D2E] shadow-sm placeholder:text-[#5A7A6E]/70 focus:outline-none focus:ring-2 focus:ring-[#0D3D2E]/15 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{ fontFamily: "var(--font-sans)" }}
+            />
+            <button
+              type="submit"
+              disabled={ui.isLoading || !input.trim()}
+              aria-label="보내기"
+              className="absolute bottom-1.5 right-1.5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#0D3D2E] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {ui.isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowUp className="h-4 w-4" strokeWidth={2.25} />
+              )}
+            </button>
           </div>
         </form>
       </footer>
@@ -489,7 +492,7 @@ export default function TitanicQaApp() {
   const [view, setView] = useState<"qa" | "data">("qa");
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-900">
+    <div className="h-[calc(100vh-3.5rem)] bg-[#FAF3EB]">
       {view === "qa" ? (
         <TitanicQAPage onSwitchView={() => setView("data")} />
       ) : (

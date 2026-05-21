@@ -20,12 +20,19 @@ import { Label } from "@/components/ui/label";
 import NavWeather from "@/components/nav-weather";
 import SignupDialog from "@/components/signup-dialog";
 import FormaLogo from "@/components/forma-logo";
-import { NavTooltip, navActionClassName } from "@/components/nav-icon-action";
+import {
+  NavTooltip,
+  getNavVariant,
+  navActionClassName,
+  navBarClassName,
+  navLogoClassName,
+} from "@/components/nav-icon-action";
 import { getApiBase } from "@/lib/api-base";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const navVariant = getNavVariant(pathname);
+  const isHome = navVariant === "home";
   const [open, setOpen] = React.useState(false);
 
   async function handleLoginSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -61,14 +68,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav
-      className={
-        isHome
-          ? "absolute top-0 left-0 z-50 w-full border-b border-white/10 bg-gradient-to-b from-[var(--hero-nav-from)] via-[var(--hero-nav-via)] to-transparent backdrop-blur-[2px]"
-          : "w-full border-b border-border bg-background"
-      }
-      aria-label="메인 네비게이션"
-    >
+    <nav className={navBarClassName(navVariant)} aria-label="메인 네비게이션">
       <div className="mx-auto flex h-14 max-w-screen-xl items-center justify-between px-4">
         <div className="flex min-w-0 items-center">
           <Link
@@ -79,9 +79,9 @@ export default function Navbar() {
                 : "shrink-0 transition-opacity hover:opacity-80"
             }
           >
-            <FormaLogo className={isHome ? "hero-readable-tight !text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.65)]" : undefined} />
+            <FormaLogo className={navLogoClassName(navVariant)} />
           </Link>
-          <NavWeather isHome={isHome} />
+          <NavWeather variant={navVariant} />
         </div>
 
         {/* Right side */}
@@ -89,19 +89,19 @@ export default function Navbar() {
           <NavTooltip label="파일 올리기">
             <Link
               href="/titanic"
-              className={navActionClassName(isHome)}
+              className={navActionClassName(navVariant)}
               aria-label="파일 올리기"
             >
               <Upload className="h-4 w-4 shrink-0" aria-hidden="true" />
             </Link>
           </NavTooltip>
-          <SignupDialog isHome={isHome} />
+          <SignupDialog navVariant={navVariant} />
           <Dialog open={open} onOpenChange={setOpen}>
             <NavTooltip label="로그인">
               <DialogTrigger asChild>
                 <button
                   type="button"
-                  className={navActionClassName(isHome)}
+                  className={navActionClassName(navVariant)}
                   aria-label="로그인"
                 >
                   <LogIn className="h-4 w-4 shrink-0" aria-hidden="true" />

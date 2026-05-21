@@ -30,7 +30,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "TOR",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/3/36/Toronto_Raptors_logo.svg",
-      color: "#716d8f",
+      color: "#5a6b62",
       score: 104,
     },
     away: {
@@ -38,7 +38,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "MIA",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/f/fb/Miami_Heat_logo.svg",
-      color: "#98002E",
+      color: "#735248",
       score: 114,
     },
   },
@@ -54,7 +54,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "MIL",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/4/4a/Milwaukee_Bucks_logo.svg",
-      color: "#00471B",
+      color: "#3d5248",
       score: 121,
     },
     away: {
@@ -62,7 +62,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "BOS",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
-      color: "#007A33",
+      color: "#4a5e52",
       score: 118,
     },
   },
@@ -78,7 +78,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "LIV",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg",
-      color: "#C8102E",
+      color: "#6b4f52",
       score: 2,
     },
     away: {
@@ -86,7 +86,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "MCI",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg",
-      color: "#6CABDD",
+      color: "#5a6d72",
       score: 1,
     },
   },
@@ -102,7 +102,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "KC",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/e/e1/Kansas_City_Chiefs_logo.svg",
-      color: "#E31837",
+      color: "#6b4a4f",
       score: 27,
     },
     away: {
@@ -110,7 +110,7 @@ export const featuredMatches: FeaturedMatch[] = [
       abbr: "BUF",
       logo:
         "https://upload.wikimedia.org/wikipedia/en/7/77/Buffalo_Bills_logo.svg",
-      color: "#00338D",
+      color: "#4a5568",
       score: 24,
     },
   },

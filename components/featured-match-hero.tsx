@@ -4,70 +4,48 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { HorizontalScrollRow } from "@/components/horizontal-scroll-row";
 import { featuredMatches, type FeaturedMatch } from "@/lib/featured-matches";
 import { cn } from "@/lib/utils";
 
 function ScoreBar({ match }: { match: FeaturedMatch }) {
-  const winner =
-    match.home.score === match.away.score
-      ? null
-      : match.home.score > match.away.score
-        ? "home"
-        : "away";
-
   return (
-    <div className="hero-readable flex items-center justify-center gap-3 px-4 py-3 text-sm font-semibold text-white sm:gap-5 sm:text-base">
-      <div className="flex min-w-0 flex-1 items-center justify-end gap-2">
+    <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 py-3 text-sm font-semibold text-[var(--hero-score-text)] sm:text-base">
+      <div aria-hidden className="min-w-0" />
+
+      <div className="flex min-w-0 items-center justify-center gap-2 sm:gap-3">
         <Image
           src={match.home.logo}
           alt=""
           width={28}
           height={28}
-          className="h-7 w-7 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]"
+          className="h-7 w-7 shrink-0 object-contain opacity-90"
         />
         <span className="hidden sm:inline">{match.home.abbr}</span>
-        <span
-          className={cn(
-            "tabular-nums",
-            winner === "home" ? "text-white" : "text-white/55",
-          )}
-        >
-          {match.home.score}
-        </span>
-      </div>
-
-      <div className="flex shrink-0 flex-col items-center">
-        <span className="text-[10px] font-bold tracking-[0.18em] text-white/70 sm:text-xs">
+        <span className="tabular-nums">{match.home.score}</span>
+        <span className="text-[10px] font-bold tracking-[0.18em] sm:text-xs">
           {match.status}
         </span>
-      </div>
-
-      <div className="flex min-w-0 flex-1 items-center gap-2">
-        <span
-          className={cn(
-            "tabular-nums",
-            winner === "away" ? "text-white" : "text-white/55",
-          )}
-        >
-          {match.away.score}
-        </span>
+        <span className="tabular-nums">{match.away.score}</span>
         <span className="hidden sm:inline">{match.away.abbr}</span>
         <Image
           src={match.away.logo}
           alt=""
           width={28}
           height={28}
-          className="h-7 w-7 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.55)]"
+          className="h-7 w-7 shrink-0 object-contain opacity-90"
         />
       </div>
 
-      <Link
-        href="/chat"
-        className="hero-readable-tight shrink-0 rounded-lg border border-white/35 bg-white/10 px-2.5 py-1 text-xs font-bold tracking-wide text-white transition-colors hover:bg-white/18 sm:px-3 sm:text-sm"
-        aria-label="AI 질문 페이지로 이동"
-      >
-        AI
-      </Link>
+      <div className="flex min-w-0 justify-end">
+        <Link
+          href="/chat"
+          className="shrink-0 rounded-full border border-[var(--hero-border)] bg-[var(--hero-control-idle)] px-3.5 py-1.5 text-sm font-bold tracking-wide transition-colors hover:bg-[var(--hero-control-hover)] sm:px-4 sm:py-2 sm:text-base"
+          aria-label="AI Chat 페이지로 이동"
+        >
+          AI Chat
+        </Link>
+      </div>
     </div>
   );
 }
@@ -81,9 +59,14 @@ function MatchVisual({ match }: { match: FeaturedMatch }) {
     >
       {/* Single continuous blend in OKLab — perceptually even flow between team colors */}
       <div
+        className="absolute inset-0 bg-[linear-gradient(115deg_in_oklab,var(--hero-match-from),var(--hero-match-to))]"
+        aria-hidden
+      />
+      <div
         className="absolute inset-0"
         style={{
           background: `linear-gradient(115deg in oklab, ${match.home.color}, ${match.away.color})`,
+          opacity: 0.72,
         }}
         aria-hidden
       />
@@ -169,7 +152,7 @@ export default function FeaturedMatchHero() {
   return (
     <section className="relative isolate w-full overflow-hidden bg-[var(--hero-surface)] pt-14">
       {/* Score strip */}
-      <div className="relative z-10 border-b border-white/10 bg-[var(--hero-surface-raised)]">
+      <div className="relative z-10 border-b border-[var(--hero-border)] bg-[var(--hero-surface)]">
         <ScoreBar match={match} />
       </div>
 
@@ -177,18 +160,19 @@ export default function FeaturedMatchHero() {
       <MatchVisual match={match} />
 
       {/* Match picker dots + thumbnails */}
-      <div className="border-t border-white/10 bg-[var(--hero-surface)] px-4 py-3">
-        <div className="mx-auto flex max-w-screen-xl items-center justify-center gap-2 overflow-x-auto pb-1">
+      <div className="border-b border-[var(--hero-border)] bg-[var(--hero-surface)] pt-3 pb-0">
+        <HorizontalScrollRow className="scroll-px-4">
+          <div className="mx-auto flex w-max items-center gap-2 px-4">
           {featuredMatches.map((m, i) => (
             <button
               key={m.id}
               type="button"
               onClick={() => setIndex(i)}
               className={cn(
-                "hero-readable-tight flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
+                "flex shrink-0 items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
                 i === index
-                  ? "border-white/35 bg-white/18 text-white"
-                  : "border-white/15 bg-white/8 text-white/70 hover:bg-white/14 hover:text-white",
+                  ? "border-[var(--hero-border-strong)] bg-[var(--hero-control-active)] text-[var(--hero-foreground)] shadow-sm"
+                  : "border-[var(--hero-border)] bg-[var(--hero-control-idle)] text-[var(--hero-muted)] hover:bg-[var(--hero-control-hover)] hover:text-[var(--hero-foreground)]",
               )}
               aria-label={`${m.home.abbr} vs ${m.away.abbr}`}
               aria-current={i === index ? "true" : undefined}
@@ -201,7 +185,7 @@ export default function FeaturedMatchHero() {
                 className="h-[18px] w-[18px] object-contain drop-shadow-[0_1px_4px_rgba(0,0,0,0.55)]"
               />
               <span>{m.home.abbr}</span>
-              <span className="text-white/40">·</span>
+              <span className="text-[var(--hero-muted)]/50">·</span>
               <span>{m.away.abbr}</span>
               <Image
                 src={m.away.logo}
@@ -212,7 +196,8 @@ export default function FeaturedMatchHero() {
               />
             </button>
           ))}
-        </div>
+          </div>
+        </HorizontalScrollRow>
       </div>
     </section>
   );

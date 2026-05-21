@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
 
+import { HorizontalScrollRow } from "@/components/horizontal-scroll-row";
 import { ProfileAvatarFrame } from "@/components/profile-avatar-frame";
 import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { getSportBySlug } from "@/lib/sports-data";
@@ -13,7 +14,7 @@ export default function SubscribedFavoritesRow() {
   return (
     <section
       aria-label="구독중"
-      className="border-t border-border bg-muted px-4 py-6 md:py-8"
+      className="border-b border-border bg-muted px-4 pt-6 pb-0 md:pt-8"
     >
       <div className="mx-auto max-w-5xl">
         <div className="mb-4 flex items-center gap-2">
@@ -27,14 +28,16 @@ export default function SubscribedFavoritesRow() {
         </div>
 
         {!ready ? (
-          <p className="text-sm text-muted-foreground">불러오는 중…</p>
+          <p className="pb-6 text-sm text-muted-foreground md:pb-8">
+            불러오는 중…
+          </p>
         ) : providers.length === 0 ? (
-          <p className="text-sm leading-relaxed text-muted-foreground">
+          <p className="pb-6 text-sm leading-relaxed text-muted-foreground md:pb-8">
             스포츠별 자세 가이드에서 마음에 드는 코치를 구독하면 여기에
             표시됩니다.
           </p>
         ) : (
-          <div className="-mx-1 overflow-x-auto pb-1">
+          <HorizontalScrollRow className="-mx-1">
             <ul className="flex min-w-min gap-4 px-1">
               {providers.map((provider) => {
                 const sport = getSportBySlug(provider.sportSlug);
@@ -48,7 +51,7 @@ export default function SubscribedFavoritesRow() {
                       <ProfileAvatarFrame
                         src={provider.avatarUrl}
                         alt={provider.name}
-                        className="shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-[var(--profile-frame-border)] group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background"
+                        className="shadow-sm transition-shadow group-hover:ring-2 group-hover:ring-inset group-hover:ring-[var(--profile-frame-border)]/40 group-focus-visible:ring-2 group-focus-visible:ring-inset group-focus-visible:ring-[var(--profile-frame-border)]"
                       />
                       <p className="w-full truncate text-center text-xs font-semibold text-foreground">
                         {provider.name}
@@ -61,7 +64,7 @@ export default function SubscribedFavoritesRow() {
                 );
               })}
             </ul>
-          </div>
+          </HorizontalScrollRow>
         )}
       </div>
     </section>

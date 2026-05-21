@@ -4,6 +4,7 @@ import * as React from "react";
 import { Cloud } from "lucide-react";
 
 import { getApiBase } from "@/lib/api-base";
+import type { NavVariant } from "@/components/nav-icon-action";
 
 type WeatherData = {
   city: string;
@@ -13,10 +14,12 @@ type WeatherData = {
 };
 
 type NavWeatherProps = {
-  isHome: boolean;
+  variant: NavVariant;
 };
 
-export default function NavWeather({ isHome }: NavWeatherProps) {
+export default function NavWeather({ variant }: NavWeatherProps) {
+  const isHome = variant === "home";
+  const isWarm = variant === "warm";
   const [weather, setWeather] = React.useState<WeatherData | null>(null);
   const [loading, setLoading] = React.useState(true);
 
@@ -61,9 +64,10 @@ export default function NavWeather({ isHome }: NavWeatherProps) {
     };
   }, []);
 
-  const shell = isHome
-    ? "hero-readable-tight border-white/20 bg-white/10 text-white"
-    : "border-border bg-muted/50 text-foreground";
+  const shell =
+    isHome || isWarm
+      ? "border-[#0D3D2E]/15 bg-white/70 text-[#0D3D2E] shadow-sm"
+      : "border-border bg-muted/50 text-foreground";
 
   if (loading) {
     return (
@@ -106,8 +110,8 @@ export default function NavWeather({ isHome }: NavWeatherProps) {
       <span className="tabular-nums">{weather.temp_c}°</span>
       <span
         className={
-          isHome
-            ? "hidden text-white/75 sm:inline"
+          isHome || isWarm
+            ? "hidden text-[#5A7A6E] sm:inline"
             : "hidden text-muted-foreground sm:inline"
         }
       >

@@ -3,53 +3,63 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Light theme: soft lavender-gray (ref. #E2E2E8-bg, #C5C6D0 cards, #303080 accent) */
+/* Light theme: Forma cream + forest green (#FAF6F1, #0D3D2E) */
 :root {
-  --background: oklch(0.91 0.014 285);
-  --foreground: oklch(0.22 0.038 285);
-  --card: oklch(0.805 0.029 282);
-  --card-foreground: oklch(0.22 0.038 285);
-  --popover: oklch(0.805 0.029 282);
-  --popover-foreground: oklch(0.22 0.038 285);
-  --primary: oklch(0.32 0.14 286);
-  --primary-foreground: oklch(0.96 0.012 285);
-  --secondary: oklch(0.865 0.022 285);
-  --secondary-foreground: oklch(0.26 0.05 285);
-  --muted: oklch(0.885 0.018 285);
-  --muted-foreground: oklch(0.46 0.038 285);
-  --accent: oklch(0.84 0.026 285);
-  --accent-foreground: oklch(0.3 0.12 286);
+  --background: #faf6f1;
+  --foreground: oklch(0.3 0.045 165);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.3 0.045 165);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.3 0.045 165);
+  --primary: oklch(0.3 0.045 165);
+  --primary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.955 0.014 85);
+  --secondary-foreground: oklch(0.3 0.045 165);
+  --muted: oklch(0.94 0.014 85);
+  --muted-foreground: oklch(0.52 0.03 165);
+  --accent: oklch(0.93 0.016 85);
+  --accent-foreground: oklch(0.3 0.045 165);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0.01 285);
-  --border: oklch(0.755 0.028 285);
-  --input: oklch(0.755 0.028 285);
-  --ring: oklch(0.42 0.09 286);
-  --chart-1: oklch(0.52 0.16 286);
+  --destructive-foreground: oklch(0.985 0.01 85);
+  --border: oklch(0.86 0.02 165);
+  --input: oklch(0.86 0.02 165);
+  --ring: oklch(0.42 0.06 165);
+  --chart-1: oklch(0.42 0.08 165);
   --chart-2: oklch(0.58 0.1 200);
   --chart-3: oklch(0.45 0.08 265);
   --chart-4: oklch(0.72 0.12 85);
   --chart-5: oklch(0.65 0.14 60);
   --radius: 1.125rem;
-  --sidebar: oklch(0.88 0.02 285);
-  --sidebar-foreground: oklch(0.22 0.038 285);
-  --sidebar-primary: oklch(0.32 0.14 286);
-  --sidebar-primary-foreground: oklch(0.96 0.012 285);
-  --sidebar-accent: oklch(0.84 0.026 285);
-  --sidebar-accent-foreground: oklch(0.3 0.12 286);
-  --sidebar-border: oklch(0.755 0.028 285);
-  --sidebar-ring: oklch(0.42 0.09 286);
-  /* Hero chrome: muted lavender (lighter; text uses .hero-readable) */
-  --hero-surface: oklch(0.42 0.034 285);
-  --hero-surface-raised: oklch(0.46 0.037 285);
-  --hero-scrim: oklch(0.38 0.04 285 / 0.2);
-  --hero-glass: oklch(0.55 0.045 285 / 0.38);
-  --hero-control: oklch(0.52 0.046 285 / 0.44);
-  --hero-control-hover: oklch(0.46 0.048 285 / 0.56);
-  --hero-nav-from: oklch(0.48 0.04 285 / 0.62);
-  --hero-nav-via: oklch(0.45 0.036 285 / 0.26);
-  /* Flat capsule scrollbar (sport row horizontal scroll) */
-  --scrollbar-simple-thumb: #5d5d7a;
-  --scrollbar-simple-track: #e8e9f3;
+  --sidebar: oklch(0.96 0.012 85);
+  --sidebar-foreground: oklch(0.3 0.045 165);
+  --sidebar-primary: oklch(0.3 0.045 165);
+  --sidebar-primary-foreground: oklch(0.98 0.01 85);
+  --sidebar-accent: oklch(0.93 0.016 85);
+  --sidebar-accent-foreground: oklch(0.3 0.045 165);
+  --sidebar-border: oklch(0.86 0.02 165);
+  --sidebar-ring: oklch(0.42 0.06 165);
+  /* Nav: lightest cream (#FAF6F1) */
+  --nav-surface: #faf6f1;
+  /* Hero bars: warm sand — slightly darker than nav */
+  --hero-surface: #ede8df;
+  --hero-surface-raised: #e3ddd2;
+  --hero-foreground: #0d3d2e;
+  --hero-muted: #5a7a6e;
+  --hero-score-text: #7f948c;
+  --hero-border: #0d3d2e1a;
+  --hero-border-strong: #0d3d2e33;
+  /* Match banner: muted sage → warm umber (Forma-aligned) */
+  --hero-match-from: #4f6359;
+  --hero-match-to: #6b5348;
+  --hero-scrim: #0d3d2e24;
+  --hero-glass: #ffffffc9;
+  --hero-control-active: #ffffff;
+  --hero-control-idle: #faf6f1b3;
+  --hero-control-hover: #ffffff;
+  --scrollbar-simple-thumb: #9fb0a2;
+  --scrollbar-simple-track: #e8e4dc;
+  --scrollbar-simple-height: calc(10px * 2 / 3);
+  --scrollbar-simple-slot-y: 12px;
 }
 
 .dark {
@@ -156,20 +166,22 @@
     text-shadow: 0 1px 3px oklch(0.1 0.045 285 / 0.85);
   }
 
-  /* Minimal horizontal scrollbar: rounded track + thumb, no arrow buttons */
+  /* Minimal horizontal scrollbar: sage thumb, beige track, no arrow buttons */
   .scrollbar-simple-x {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-simple-thumb) var(--scrollbar-simple-track);
   }
 
   .scrollbar-simple-x::-webkit-scrollbar {
-    height: 8px;
+    -webkit-appearance: none;
+    appearance: none;
+    height: var(--scrollbar-simple-height);
   }
 
   .scrollbar-simple-x::-webkit-scrollbar-track {
-    margin-inline: 6px;
+    margin-inline: 0;
     background: var(--scrollbar-simple-track);
-    border-radius: 9999px;
+    border-radius: 4px;
   }
 
   .scrollbar-simple-x::-webkit-scrollbar-thumb {
@@ -181,30 +193,28 @@
     filter: brightness(0.94);
   }
 
-  .scrollbar-simple-x::-webkit-scrollbar-button {
-    display: none;
-    width: 0 !important;
-    height: 0 !important;
-  }
-
+  .scrollbar-simple-x::-webkit-scrollbar-button,
   .scrollbar-simple-x::-webkit-scrollbar-button:single-button,
-  .scrollbar-simple-x::-webkit-scrollbar-button:double-button {
-    display: none;
-    width: 0;
-    min-width: 0;
-    max-width: 0;
-    height: 0;
-    min-height: 0;
-    max-height: 0;
-  }
-
+  .scrollbar-simple-x::-webkit-scrollbar-button:double-button,
+  .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:decrement,
+  .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:increment,
   .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:start:decrement,
   .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:start:increment,
   .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:end:decrement,
   .scrollbar-simple-x::-webkit-scrollbar-button:horizontal:end:increment {
-    display: none;
-    width: 0;
-    height: 0;
+    display: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 0 !important;
+    min-width: 0 !important;
+    max-width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    opacity: 0;
+    pointer-events: none;
   }
 
   .scrollbar-simple-x::-webkit-scrollbar-corner {

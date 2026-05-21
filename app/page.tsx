@@ -35,7 +35,7 @@ export default function HomePage() {
       <SubscribedFavoritesRow />
 
       {/* Posture importance */}
-      <section className="border-t border-border bg-muted px-4 py-12 md:py-16">
+      <section className="bg-muted px-4 py-12 md:py-16">
         <div className="mx-auto grid max-w-5xl overflow-hidden rounded-[2rem] border border-border bg-card shadow-sm lg:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[260px] overflow-hidden lg:min-h-full">
             <Image

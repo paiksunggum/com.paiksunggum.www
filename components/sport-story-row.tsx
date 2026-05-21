@@ -1,17 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { HorizontalScrollRow } from "@/components/horizontal-scroll-row";
 import { sports } from "@/lib/sports-data";
 
 export default function SportStoryRow() {
   return (
-    <section className="border-t border-border bg-background px-4 py-8 md:py-10">
+    <section className="border-b border-border bg-[var(--hero-surface)] px-4 pt-8 pb-0 md:pt-10">
       <div className="mx-auto max-w-5xl">
-        <p className="mb-4 inline-flex rounded-xl border border-[#676783] bg-[#676783] px-3 py-1.5 text-sm font-semibold text-white">
+        <p className="mb-4 inline-flex rounded-xl border border-[var(--hero-border)] bg-[#f1ede6] px-3 py-1.5 text-sm font-semibold text-[var(--hero-score-text)]">
           스포츠별 자세 가이드
         </p>
 
-        <div className="-mx-1 overflow-x-auto pb-2 scrollbar-simple-x">
+        <HorizontalScrollRow className="-mx-1">
           <ul className="flex min-w-min gap-4 px-1">
             {sports.map((sport) => (
               <li key={sport.slug} className="w-[88px] shrink-0 sm:w-[96px]">
@@ -21,7 +22,7 @@ export default function SportStoryRow() {
                   aria-label={`${sport.name} ${sport.league} 페이지로 이동`}
                 >
                   <div
-                    className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center overflow-hidden rounded-full p-3 shadow-sm transition-transform group-hover:scale-105 group-focus-visible:ring-2 group-focus-visible:ring-primary group-focus-visible:ring-offset-2 group-focus-visible:ring-offset-background"
+                    className="relative flex h-[72px] w-[72px] shrink-0 items-center justify-center rounded-full p-3 shadow-sm transition-shadow group-hover:ring-2 group-hover:ring-inset group-hover:ring-white/25 group-focus-visible:ring-2 group-focus-visible:ring-inset group-focus-visible:ring-primary"
                     style={{ backgroundColor: sport.brandColor }}
                   >
                     <Image
@@ -43,7 +44,7 @@ export default function SportStoryRow() {
               </li>
             ))}
           </ul>
-        </div>
+        </HorizontalScrollRow>
       </div>
     </section>
   );

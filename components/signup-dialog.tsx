@@ -15,7 +15,11 @@ import {
 
 import { getApiBase } from "@/lib/api-base";
 import { cn } from "@/lib/utils";
-import { NavTooltip, navActionClassName } from "@/components/nav-icon-action";
+import {
+  NavTooltip,
+  navActionClassName,
+  type NavVariant,
+} from "@/components/nav-icon-action";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -69,7 +73,7 @@ const fieldInputClass =
   "h-10 w-full min-w-0 border-0 bg-transparent p-0 text-[15px] text-neutral-900 shadow-none outline-none placeholder:text-neutral-400 focus-visible:ring-0";
 
 type SignupDialogProps = {
-  isHome: boolean;
+  navVariant: NavVariant;
 };
 
 type SignupState = {
@@ -84,7 +88,7 @@ const initialSignupState: SignupState = {
   gender: null,
 };
 
-export default function SignupDialog({ isHome }: SignupDialogProps) {
+export default function SignupDialog({ navVariant }: SignupDialogProps) {
   const router = useRouter();
   const [state, setState] = React.useState<SignupState>(initialSignupState);
 
@@ -152,7 +156,7 @@ export default function SignupDialog({ isHome }: SignupDialogProps) {
         <DialogTrigger asChild>
           <button
             type="button"
-            className={navActionClassName(isHome)}
+            className={navActionClassName(navVariant)}
             aria-label="회원가입"
           >
             <UserPlus className="h-4 w-4 shrink-0" aria-hidden />
