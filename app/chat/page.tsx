@@ -22,7 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getApiBase } from "@/lib/api-base";
+import { getApiBase, getChatApiUrl } from "@/lib/api-base";
 
 /* ─────────────────────────────────────────────────────────────
    Types
@@ -120,7 +120,7 @@ function TitanicQAPage({
     setInput("");
 
     try {
-      const res = await fetch(`${getApiBase()}/chat`, {
+      const res = await fetch(getChatApiUrl(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
