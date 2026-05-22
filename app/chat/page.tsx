@@ -240,11 +240,18 @@ function TitanicQAPage({
         <div className="mx-auto max-w-xl space-y-3">
           {messages.length === 0 && (
             <div className="flex min-h-[50vh] items-center justify-center">
-              <p
-                className={`${chatSerif.className} text-center text-[17px] leading-relaxed text-[#0D3D2E]`}
-              >
-                안녕하세요!
-              </p>
+              <div className="flex flex-col items-center gap-1 text-center">
+                <p
+                  className={`${chatSerif.className} text-[17px] leading-relaxed text-[#0D3D2E]`}
+                >
+                  안녕하세요!
+                </p>
+                <p
+                  className={`${chatSerif.className} text-[17px] leading-relaxed text-[#0D3D2E]`}
+                >
+                  AI Chat에 물어보세요.
+                </p>
+              </div>
             </div>
           )}
 
@@ -347,7 +354,7 @@ function TitanicQAPage({
               type="submit"
               disabled={ui.isLoading || !input.trim()}
               aria-label="보내기"
-              className="absolute bottom-1.5 right-1.5 inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#0D3D2E] text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
+              className="absolute bottom-1.5 right-1.5 inline-flex h-9 w-9 items-center justify-center rounded-full border border-[#0D3D2E]/25 bg-[#0D3D2E]/55 text-white shadow-sm backdrop-blur-md transition-colors hover:bg-[#0D3D2E]/75 disabled:cursor-not-allowed disabled:bg-[#0D3D2E]/30 disabled:opacity-60"
             >
               {ui.isLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />

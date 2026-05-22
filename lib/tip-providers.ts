@@ -439,3 +439,40 @@ export function getTipProviderById(id: string): TipProvider | undefined {
 export function getTipProvidersBySport(sportSlug: string): TipProvider[] {
   return tipProviders.filter((p) => p.sportSlug === sportSlug);
 }
+
+export function getRecommendedProvidersForSport(
+  sportSlug: string,
+  subscribedIds: string[],
+  limit = 8,
+): TipProvider[] {
+  const subscribed = new Set(subscribedIds);
+  return tipProviders
+    .filter((p) => p.sportSlug === sportSlug && !subscribed.has(p.id))
+    .slice(0, limit);
+}
+
+export type ProvidersBySport = {
+  sportSlug: string;
+  sportName: string;
+  providers: TipProvider[];
+};
+
+export function getProvidersGroupedBySport(
+  sportNames: Map<string, string>,
+): ProvidersBySport[] {
+  const bySlug = new Map<string, TipProvider[]>();
+
+  for (const provider of tipProviders) {
+    const list = bySlug.get(provider.sportSlug) ?? [];
+    list.push(provider);
+    bySlug.set(provider.sportSlug, list);
+  }
+
+  return [...bySlug.entries()]
+    .map(([sportSlug, providers]) => ({
+      sportSlug,
+      sportName: sportNames.get(sportSlug) ?? sportSlug,
+      providers,
+    }))
+    .sort((a, b) => a.sportName.localeCompare(b.sportName, "ko"));
+}

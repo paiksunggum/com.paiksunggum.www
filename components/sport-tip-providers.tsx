@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import { UserPlus } from "lucide-react";
 
+import { SubscriptionCircleAvatar } from "@/components/subscription-circle-avatar";
 import { Button } from "@/components/ui/button";
 import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { getTipProvidersBySport } from "@/lib/tip-providers";
@@ -42,15 +42,13 @@ export default function SportTipProviders({
               key={provider.id}
               className="flex gap-4 rounded-2xl border border-border bg-card p-4"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-full border-2 border-primary">
-                <Image
-                  src={provider.avatarUrl}
-                  alt={provider.name}
-                  fill
-                  sizes="64px"
-                  className="object-cover"
-                />
-              </div>
+              <SubscriptionCircleAvatar
+                src={provider.avatarUrl}
+                alt={provider.name}
+                seed={provider.id}
+                size={64}
+                className="border-2 border-primary"
+              />
 
               <div className="min-w-0 flex-1">
                 <p className="font-semibold text-foreground">

@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: {
+    position: "bottom-right",
+  },
   async rewrites() {
     return [
       {

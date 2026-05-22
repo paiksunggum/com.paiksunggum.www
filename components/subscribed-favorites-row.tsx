@@ -1,57 +1,95 @@
 "use client";
 
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { useCallback, useState } from "react";
 
-import { HorizontalScrollRow } from "@/components/horizontal-scroll-row";
-import { ProfileAvatarFrame } from "@/components/profile-avatar-frame";
+import { SubscriptionCircleAvatar } from "@/components/subscription-circle-avatar";
 import { useSubscriptions } from "@/hooks/use-subscriptions";
 import { getSportBySlug } from "@/lib/sports-data";
+import { cn } from "@/lib/utils";
+
+const MAIN_SUBSCRIPTION_AVATAR_SIZE = 72;
+/** ~half of w-[100px] / sm:w-[108px] so stacked avatars peek from behind */
+const STACK_OVERLAP = "-ml-[50px] sm:-ml-[54px]";
 
 export default function SubscribedFavoritesRow() {
   const { ready, providers } = useSubscriptions();
+  const [mobileExpanded, setMobileExpanded] = useState(false);
+
+  const toggleMobileStack = useCallback(() => {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      return;
+    }
+    setMobileExpanded((open) => !open);
+  }, []);
+
+  if (!ready) {
+    return null;
+  }
 
   return (
-    <section
-      aria-label="구독중"
-      className="border-b border-border bg-muted px-4 pt-6 pb-0 md:pt-8"
-    >
+    <section aria-label="구독중" className="bg-[#f1efe7] px-4 pb-3 pt-5">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-4 flex items-center gap-2">
-          <Star
-            className="h-4 w-4 fill-primary text-primary"
-            aria-hidden
-          />
-          <p className="text-sm font-semibold text-foreground">
-            구독중
-          </p>
-        </div>
+        <p className="mb-4 text-sm font-semibold text-foreground">구독중</p>
 
-        {!ready ? (
-          <p className="pb-6 text-sm text-muted-foreground md:pb-8">
-            불러오는 중…
-          </p>
-        ) : providers.length === 0 ? (
-          <p className="pb-6 text-sm leading-relaxed text-muted-foreground md:pb-8">
+        {providers.length === 0 ? (
+          <p className="text-sm leading-relaxed text-muted-foreground">
             스포츠별 자세 가이드에서 마음에 드는 코치를 구독하면 여기에
             표시됩니다.
           </p>
         ) : (
-          <HorizontalScrollRow className="-mx-1">
-            <ul className="flex min-w-min gap-4 px-1">
-              {providers.map((provider) => {
+          <div
+            aria-expanded={mobileExpanded}
+            aria-label="구독중 프로필 목록"
+            className={cn(
+              "group scrollbar-simple-x -mx-1 w-full overflow-x-auto overflow-y-visible pb-[var(--scrollbar-simple-slot-y)]",
+              !mobileExpanded && "max-md:cursor-pointer",
+            )}
+            onClick={toggleMobileStack}
+          >
+            <ul
+              className={cn(
+                "flex w-fit min-w-min px-1 transition-[gap] duration-300 ease-out",
+                mobileExpanded
+                  ? "gap-4"
+                  : cn(
+                      "gap-0",
+                      "[@media(hover:hover)_and_(pointer:fine)]:group-hover:gap-4",
+                    ),
+              )}
+            >
+              {providers.map((provider, index) => {
                 const sport = getSportBySlug(provider.sportSlug);
+
                 return (
-                  <li key={provider.id} className="w-[100px] shrink-0 sm:w-[108px]">
+                  <li
+                    key={provider.id}
+                    style={{ zIndex: providers.length - index }}
+                    className={cn(
+                      "w-[100px] shrink-0 transition-[margin] duration-300 ease-out sm:w-[108px]",
+                      index > 0 &&
+                        !mobileExpanded &&
+                        cn(
+                          STACK_OVERLAP,
+                          "[@media(hover:hover)_and_(pointer:fine)]:group-hover:ml-0",
+                        ),
+                    )}
+                  >
                     <Link
                       href={`/sports/${provider.sportSlug}`}
-                      className="group flex flex-col items-center gap-2 focus-visible:outline-none"
+                      className={cn(
+                        "group/link flex flex-col items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                        !mobileExpanded && "max-md:pointer-events-none",
+                      )}
                       aria-label={`${provider.name} · ${sport?.name ?? ""} 페이지`}
+                      onClick={(event) => event.stopPropagation()}
                     >
-                      <ProfileAvatarFrame
+                      <SubscriptionCircleAvatar
                         src={provider.avatarUrl}
                         alt={provider.name}
-                        className="shadow-sm transition-shadow group-hover:ring-2 group-hover:ring-inset group-hover:ring-[var(--profile-frame-border)]/40 group-focus-visible:ring-2 group-focus-visible:ring-inset group-focus-visible:ring-[var(--profile-frame-border)]"
+                        seed={provider.id}
+                        size={MAIN_SUBSCRIPTION_AVATAR_SIZE}
+                        className="shadow-sm ring-2 ring-[#f1efe7]"
                       />
                       <p className="w-full truncate text-center text-xs font-semibold text-foreground">
                         {provider.name}
@@ -64,7 +102,7 @@ export default function SubscribedFavoritesRow() {
                 );
               })}
             </ul>
-          </HorizontalScrollRow>
+          </div>
         )}
       </div>
     </section>
