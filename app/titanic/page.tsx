@@ -151,7 +151,7 @@ export default function TitanicHomePage() {
   return (
     <div className="min-h-[calc(100vh-3.5rem)] bg-white px-4 py-10 text-neutral-900">
       <h1 className="text-center text-4xl font-bold tracking-tight md:text-6xl">
-        포르마
+        타이타닉
       </h1>
       <p className="mx-auto mt-3 max-w-xl text-center text-sm text-neutral-500">
         CSV 또는 동영상 파일은 아래{" "}
