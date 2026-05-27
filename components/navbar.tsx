@@ -88,7 +88,7 @@ export default function Navbar() {
         <div className="flex items-center gap-1.5">
           <NavTooltip label="파일 올리기">
             <Link
-              href="/titanic"
+              href="/lesson/titanic"
               className={navActionClassName(navVariant)}
               aria-label="파일 올리기"
             >
