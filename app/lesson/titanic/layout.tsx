@@ -2,38 +2,20 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Database, FileSearch, Menu, Sparkles } from "lucide-react";
+import { FileUp, Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 const topMenus = [
-  { label: "ALL", href: "/lesson/titanic" },
-  { label: "R.A.G SYSTEM", href: "/lesson/titanic" },
-  { label: "ARCHITECTURE", href: "/lesson/titanic" },
-  { label: "AGENT", href: "/lesson/titanic" },
-  { label: "BACKEND", href: "/lesson/titanic" },
-  { label: "MOBILE", href: "/lesson/titanic" },
-  { label: "DEVOPS", href: "/lesson/titanic" },
-  { label: "NLP", href: "/lesson/titanic" },
-  { label: "수업편", href: "/lesson/titanic" },
+  { label: "승객 목록", href: "/lesson/titanic/passengers" },
 ];
 
 const lessonMenus = [
   {
-    label: "데이터 수집",
+    label: "파일 업로드",
     href: "/lesson/titanic/data-collection",
-    icon: Database,
-  },
-  {
-    label: "데이터 분석",
-    href: "/lesson/titanic",
-    icon: FileSearch,
-  },
-  {
-    label: "모델링",
-    href: "/lesson/titanic",
-    icon: Sparkles,
+    icon: FileUp,
   },
 ];
 

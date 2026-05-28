@@ -22,7 +22,13 @@ type UploadResult = {
   url?: string;
   lineCount?: number;
   dataRowCount?: number;
+  rowCount?: number;
+  columns?: string[];
+  data?: Record<string, string>[];
 };
+
+const BACKEND_BASE_URL =
+  process.env.NEXT_PUBLIC_BACKEND_ORIGIN ?? "http://127.0.0.1:8000";
 
 function getAcceptedKind(file: File): UploadKind | null {
   const lowerName = file.name.toLowerCase();
@@ -50,7 +56,13 @@ function formatFileSize(size: number | undefined) {
 async function postFile(file: File) {
   const formData = new FormData();
   formData.set("file", file);
-  const res = await fetch("/api/upload-file", {
+  const kind = getAcceptedKind(file);
+  const endpoint =
+    kind === "csv"
+      ? `${BACKEND_BASE_URL}/titanic/james/fileupload`
+      : "/api/upload-file";
+
+  const res = await fetch(endpoint, {
     method: "POST",
     body: formData,
   });
@@ -58,7 +70,11 @@ async function postFile(file: File) {
   if (!res.ok || !data.ok) {
     throw new Error(data.error ?? `업로드 실패 (${res.status})`);
   }
-  return data;
+  return {
+    ...data,
+    kind: data.kind ?? kind ?? undefined,
+    dataRowCount: data.dataRowCount ?? data.rowCount,
+  } as UploadResult;
 }
 
 type UploadUiState = {
@@ -169,28 +185,17 @@ export default function TitanicHomePage() {
             방식 1 · 업로드 창
           </h2>
           <input
+            id="titanic-upload-panel-input"
             ref={panelInputRef}
             type="file"
             accept={ACCEPTED_FILE_TYPES}
             className="sr-only"
-            tabIndex={-1}
-            aria-hidden
             disabled={state.uploading}
             onChange={onPanelFileChange}
           />
-          <div
-            role="button"
-            tabIndex={0}
+          <label
+            htmlFor="titanic-upload-panel-input"
             aria-label="CSV 또는 동영상 업로드 영역. 클릭하거나 파일을 끌어다 놓으세요."
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                if (!state.uploading) panelInputRef.current?.click();
-              }
-            }}
-            onClick={() => {
-              if (!state.uploading) panelInputRef.current?.click();
-            }}
             onDragOver={(e) => {
               e.preventDefault();
               if (!state.uploading) patchState({ dragOver: true });
@@ -215,7 +220,7 @@ export default function TitanicHomePage() {
             <p className="mt-2 text-sm text-neutral-500">
               예: titanic.csv, posture.mp4 — 최대 100MB
             </p>
-          </div>
+          </label>
         </section>
 
         <div className="relative">
@@ -238,12 +243,11 @@ export default function TitanicHomePage() {
             방식 2 · 업로드 버튼
           </h2>
           <input
+            id="titanic-upload-button-input"
             ref={buttonInputRef}
             type="file"
             accept={ACCEPTED_FILE_TYPES}
             className="sr-only"
-            tabIndex={-1}
-            aria-hidden
             disabled={state.uploading}
             onChange={onButtonFileChange}
           />
@@ -259,6 +263,20 @@ export default function TitanicHomePage() {
           </Button>
           <p className="text-center text-xs text-neutral-500">
             버튼을 누르면 탐색기가 열리고, 선택 즉시 서버로 전송됩니다.
+          </p>
+          <input
+            type="file"
+            accept={ACCEPTED_FILE_TYPES}
+            disabled={state.uploading}
+            className="max-w-xs text-xs text-neutral-500 file:mr-3 file:rounded-md file:border file:border-neutral-300 file:bg-white file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-neutral-700 hover:file:bg-neutral-50"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = "";
+              void runUpload(f);
+            }}
+          />
+          <p className="text-center text-[11px] text-neutral-400">
+            클릭이 안 될 때는 이 기본 선택창을 사용하세요.
           </p>
         </section>
 
