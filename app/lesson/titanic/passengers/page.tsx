@@ -57,7 +57,7 @@ export default function TitanicPassengersPage() {
       setError(null);
       try {
         const res = await fetch(
-          `/api/backend/titanic/passengers?page=${page}&page_size=${PAGE_SIZE}`,
+          `/api/backend/titanic/walter/passengers?page=${page}&page_size=${PAGE_SIZE}`,
           { cache: "no-store" },
         );
         const json = (await res.json()) as PassengerResponse;
