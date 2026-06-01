@@ -104,13 +104,22 @@ export default function SignupDialog({ navVariant }: SignupDialogProps) {
     const formProps = Object.fromEntries(formData.entries());
 
     const userId = String(formProps.userId ?? "").trim();
+    const password = String(formProps.password ?? "");
     const emailRaw = String(formProps.email ?? "").trim();
     const name = String(formProps.name ?? "").trim();
+    const birthdateRaw = String(formProps.birthdate ?? "").trim();
+    const birthdate =
+      birthdateRaw.length === 8
+        ? `${birthdateRaw.slice(0, 4)}-${birthdateRaw.slice(4, 6)}-${birthdateRaw.slice(6, 8)}`
+        : birthdateRaw;
 
     const body = {
-      user_id: userId,
+      login_id: userId,
+      password,
       email: emailRaw || `${userId}@naver.com`,
       name,
+      birthdate,
+      gender: state.gender ?? "none",
       role: "user",
     };
 
@@ -122,15 +131,20 @@ export default function SignupDialog({ navVariant }: SignupDialogProps) {
       });
 
       if (!res.ok) {
-        const body = (await res.json().catch(() => null)) as {
-          detail?: string | { msg?: string }[];
+        const errBody = (await res.json().catch(() => null)) as {
+          detail?: string | { msg?: string; type?: string }[];
         } | null;
-        const detail = body?.detail;
-        const message = Array.isArray(detail)
-          ? detail.map((d) => d.msg).filter(Boolean).join(", ")
-          : typeof detail === "string"
-            ? detail
-            : "회원가입 요청에 실패했습니다.";
+        const detail = errBody?.detail;
+        let message = "회원가입 요청에 실패했습니다.";
+        if (typeof detail === "string") {
+          message = detail;
+        } else if (Array.isArray(detail)) {
+          message =
+            detail
+              .map((d) => d.msg)
+              .filter(Boolean)
+              .join(", ") || message;
+        }
         throw new Error(message);
       }
 

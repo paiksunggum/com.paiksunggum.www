@@ -22,6 +22,7 @@ type UploadResult = {
   lineCount?: number;
   dataRowCount?: number;
   rowCount?: number;
+  inserted?: number;
 };
 
 function getAcceptedKind(file: File): UploadKind | null {
@@ -49,13 +50,20 @@ async function postFile(file: File): Promise<UploadResult> {
     body: formData,
   });
   const data = (await res.json()) as UploadResult;
-  if (!res.ok || !data.ok) {
+  if (!res.ok) {
     throw new Error(data.error ?? `업로드 실패 (${res.status})`);
+  }
+  if (data.ok === false || data.error) {
+    throw new Error(data.error ?? "업로드 실패");
+  }
+  if (kind === "csv" && data.inserted == null && data.dataRowCount == null) {
+    throw new Error(data.error ?? "업로드 실패");
   }
   return {
     ...data,
+    ok: data.ok ?? true,
     kind: data.kind ?? kind ?? undefined,
-    dataRowCount: data.dataRowCount ?? data.rowCount,
+    dataRowCount: data.dataRowCount ?? data.rowCount ?? data.inserted,
   };
 }
 
