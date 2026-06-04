@@ -49,9 +49,21 @@ async function postFile(file: File): Promise<UploadResult> {
     method: "POST",
     body: formData,
   });
-  const data = (await res.json()) as UploadResult;
+  const raw = await res.text();
+  let data: UploadResult & { detail?: string };
+  try {
+    data = raw ? (JSON.parse(raw) as UploadResult & { detail?: string }) : {};
+  } catch {
+    throw new Error(raw.trim() || `업로드 실패 (${res.status})`);
+  }
   if (!res.ok) {
-    throw new Error(data.error ?? `업로드 실패 (${res.status})`);
+    const detail =
+      typeof data.detail === "string"
+        ? data.detail
+        : Array.isArray(data.detail)
+          ? data.detail.map((d) => d.msg).join(", ")
+          : undefined;
+    throw new Error(data.error ?? detail ?? `업로드 실패 (${res.status})`);
   }
   if (data.ok === false || data.error) {
     throw new Error(data.error ?? "업로드 실패");

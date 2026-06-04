@@ -2,14 +2,17 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FileUp, Menu } from "lucide-react";
+
+import { callAndrewMyself } from "@/lib/call-andrew-myself";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
-const topMenus = [
-  { label: "승객 목록", href: "/lesson/titanic/passengers" },
-];
+const PASSENGERS_PATH = "/lesson/titanic/passengers";
+
+const topMenus = [{ label: "승객 목록", href: PASSENGERS_PATH }];
 
 const lessonMenus = [
   {
@@ -22,7 +25,14 @@ const lessonMenus = [
 export default function TitanicLessonLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (pathname === PASSENGERS_PATH) {
+      callAndrewMyself();
+    }
+  }, [pathname]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -39,7 +49,16 @@ export default function TitanicLessonLayout({
             <Menu className="h-4 w-4" aria-hidden />
           </Button>
           {topMenus.map((menu) => (
-            <Link key={menu.label} href={menu.href} className="whitespace-nowrap">
+            <Link
+              key={menu.label}
+              href={menu.href}
+              className="whitespace-nowrap"
+              onClick={() => {
+                if (pathname === menu.href) {
+                  callAndrewMyself();
+                }
+              }}
+            >
               {menu.label}
             </Link>
           ))}

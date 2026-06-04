@@ -51,34 +51,16 @@ export default function TitanicPassengersPage() {
   const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    let cancelled = false;
-    async function loadPassengers() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch(
-          `/api/backend/titanic/walter/passengers?page=${page}&page_size=${PAGE_SIZE}`,
-          { cache: "no-store" },
-        );
-        const json = (await res.json()) as PassengerResponse;
-        if (!res.ok) {
-          throw new Error("승객 목록을 불러오지 못했습니다.");
-        }
-        if (!cancelled) setData(json);
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "불러오기 오류가 발생했습니다.");
-          setData(null);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    void loadPassengers();
-    return () => {
-      cancelled = true;
-    };
-  }, [page]);
+    setLoading(false);
+    setError(null);
+    setData({
+      page: 1,
+      pageSize: PAGE_SIZE,
+      total: 0,
+      totalPages: 1,
+      items: [],
+    });
+  }, []);
 
   const totalPages = data?.totalPages ?? 1;
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
