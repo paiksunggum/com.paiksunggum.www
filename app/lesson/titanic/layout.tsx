@@ -12,7 +12,12 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 
 const PASSENGERS_PATH = "/lesson/titanic/passengers";
 
-const topMenus = [{ label: "승객 목록", href: PASSENGERS_PATH }];
+const CAPTAIN_SMITH_PATH = "/lesson/titanic/captain-smith";
+
+const topMenus = [
+  { label: "승객 목록", href: PASSENGERS_PATH },
+  { label: "스미스 선장과 대화", href: CAPTAIN_SMITH_PATH },
+];
 
 const lessonMenus = [
   {

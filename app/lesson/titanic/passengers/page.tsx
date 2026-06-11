@@ -76,6 +76,7 @@ export default function TitanicPassengersPage() {
           한 페이지당 50명씩 표시됩니다.
         </p>
       </div>
+    
 
       {error && (
         <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
