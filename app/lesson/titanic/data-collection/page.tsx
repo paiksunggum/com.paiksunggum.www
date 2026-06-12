@@ -43,7 +43,7 @@ async function postFile(file: File): Promise<UploadResult> {
 
   const kind = getAcceptedKind(file);
   const endpoint =
-    kind === "csv" ? "/api/backend/titanic/james/fileupload" : "/api/upload-file";
+    kind === "csv" ? "/api/backend/api/titanic/james/fileupload" : "/api/upload-file";
 
   const res = await fetch(endpoint, {
     method: "POST",
