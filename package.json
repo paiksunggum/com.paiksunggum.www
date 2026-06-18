@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack -p 3000",
+    "prebuild": "node -e \"const fs=require('fs');try{fs.realpathSync('CLAUDE.md')}catch(e){try{fs.unlinkSync('CLAUDE.md')}catch(e2){}fs.writeFileSync('CLAUDE.md','')}\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint ."
