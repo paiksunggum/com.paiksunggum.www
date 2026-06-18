@@ -1,1 +1,1 @@
-C:/dev/com.paiksunggum/vault/www/CLAUDE.md
+../vault/www/CLAUDE.md
