@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogIn, Upload } from "lucide-react";
+import { LogIn, Upload, LayoutDashboard } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -86,6 +86,15 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-1.5">
+          <NavTooltip label="관리자 대시보드">
+            <Link
+              href="/admin"
+              className={navActionClassName(navVariant)}
+              aria-label="관리자 대시보드"
+            >
+              <LayoutDashboard className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          </NavTooltip>
           <NavTooltip label="파일 올리기">
             <Link
               href="/lesson/titanic"
