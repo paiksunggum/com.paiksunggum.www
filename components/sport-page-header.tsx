@@ -54,7 +54,7 @@ export default function SportPageHeader({
         variant="outline"
         size="sm"
         className={cn(
-          "shrink-0 gap-1.5 border-[var(--hero-border)] bg-[#EFEBE4] text-[var(--hero-score-text)] shadow-xs hover:bg-[#E8E3DC] hover:text-[var(--hero-score-text)]",
+          "shrink-0 gap-1.5 border-border bg-[#EFEBE4] text-[var(--hero-score-text)] shadow-xs hover:bg-[#E8E3DC] hover:text-[var(--hero-score-text)] dark:bg-muted dark:text-muted-foreground dark:hover:bg-accent dark:border-border",
           favorited && "border-primary/35",
         )}
         onClick={() => toggle(slug)}

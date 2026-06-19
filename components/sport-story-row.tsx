@@ -40,7 +40,7 @@ export default function SportStoryRow() {
   return (
     <section className="border-b border-border bg-[var(--hero-surface)] px-4 pt-8 pb-5 md:pt-10 md:pb-6">
       <div className="mx-auto max-w-5xl">
-        <p className="mb-4 inline-flex rounded-xl border border-[var(--hero-border)] bg-[#f1ede6] px-3 py-1.5 text-sm font-semibold text-[var(--hero-score-text)]">
+        <p className="mb-4 inline-flex rounded-xl border border-[var(--hero-border)] bg-[#f1ede6] px-3 py-1.5 text-sm font-semibold text-[var(--hero-score-text)] dark:bg-muted dark:text-muted-foreground">
           스포츠별 자세 가이드
         </p>
 

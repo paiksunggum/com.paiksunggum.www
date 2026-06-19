@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import NavWeather from "@/components/nav-weather";
 import SignupDialog from "@/components/signup-dialog";
 import FormaLogo from "@/components/forma-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   NavTooltip,
   getNavVariant,
@@ -86,6 +87,9 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-1.5">
+          <NavTooltip label="테마 전환">
+            <ThemeToggle navVariant={navVariant} />
+          </NavTooltip>
           <NavTooltip label="관리자 대시보드">
             <Link
               href="/admin"

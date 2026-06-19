@@ -28,14 +28,14 @@ export function navBarClassName(variant: NavVariant) {
 
 export function navLogoClassName(variant: NavVariant) {
   if (variant === "home" || variant === "warm") {
-    return "!text-[#0D3D2E]";
+    return "!text-[#0D3D2E] dark:!text-foreground";
   }
   return undefined;
 }
 
 export function navActionClassName(variant: NavVariant) {
   if (variant === "home" || variant === "warm") {
-    return "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[#0D3D2E]/15 bg-white/70 text-[#0D3D2E] shadow-sm transition-colors hover:bg-white";
+    return "inline-flex size-9 shrink-0 items-center justify-center rounded-full border border-[#0D3D2E]/15 bg-white/70 text-[#0D3D2E] shadow-sm transition-colors hover:bg-white dark:border-white/15 dark:bg-white/10 dark:text-foreground dark:hover:bg-white/20";
   }
   return "inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-border bg-background text-foreground transition-colors hover:bg-accent hover:text-accent-foreground";
 }

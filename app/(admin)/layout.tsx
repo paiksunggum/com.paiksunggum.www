@@ -22,7 +22,7 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
         <div className="w-7 h-7 rounded-lg bg-[#e07b55] flex items-center justify-center">
           <span className="text-white text-xs font-black">F</span>
         </div>
-        <span className="font-black text-stone-900 text-sm tracking-tight">Forma</span>
+        <span className="font-black text-stone-900 dark:text-foreground text-sm tracking-tight">Forma</span>
       </div>
 
       {/* Profile */}
@@ -32,8 +32,8 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
             백
           </div>
         </div>
-        <p className="font-black text-stone-900 text-sm">백성검</p>
-        <p className="text-xs text-stone-400 mt-0.5">Admin Director</p>
+        <p className="font-black text-stone-900 dark:text-foreground text-sm">백성검</p>
+        <p className="text-xs text-stone-400 dark:text-muted-foreground mt-0.5">Admin Director</p>
       </div>
 
       {/* Nav */}
@@ -47,8 +47,8 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
               onClick={onClose}
               className={`py-2 px-3 rounded-xl text-sm transition-colors
                 ${isActive
-                  ? 'font-black text-stone-900 bg-white shadow-sm'
-                  : 'font-medium text-stone-400 hover:text-stone-700'}`}
+                  ? 'font-black text-stone-900 dark:text-foreground bg-white dark:bg-card shadow-sm dark:shadow-none'
+                  : 'font-medium text-stone-400 dark:text-muted-foreground hover:text-stone-700 dark:hover:text-foreground'}`}
             >
               {isActive && (
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#e07b55] mr-2 mb-0.5" />
@@ -60,9 +60,9 @@ function SidebarContent({ pathname, onClose }: { pathname: string; onClose?: () 
       </nav>
 
       {/* Logout */}
-      <button className="flex items-center gap-2 text-sm text-stone-400 hover:text-stone-700 transition-colors mt-4 px-3">
-        <div className="w-7 h-7 rounded-full bg-stone-900 flex items-center justify-center">
-          <LogOut size={13} className="text-white" />
+      <button className="flex items-center gap-2 text-sm text-stone-400 dark:text-muted-foreground hover:text-stone-700 dark:hover:text-foreground transition-colors mt-4 px-3">
+        <div className="w-7 h-7 rounded-full bg-stone-900 dark:bg-muted flex items-center justify-center">
+          <LogOut size={13} className="text-white dark:text-foreground" />
         </div>
         <span className="font-medium">Log out</span>
       </button>
@@ -75,18 +75,18 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="flex min-h-screen bg-[#f5f0e8]">
+    <div className="flex min-h-screen bg-[#f5f0e8] dark:bg-background">
 
       {/* ── 모바일 상단 바 ──────────────────────────────────── */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 flex items-center h-14 px-4 bg-[#f5f0e8] border-b border-stone-200/60">
-        <button onClick={() => setOpen(true)} className="p-2 -ml-2 text-stone-600 hover:text-stone-900">
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-30 flex items-center h-14 px-4 bg-[#f5f0e8] dark:bg-background border-b border-stone-200/60 dark:border-border">
+        <button onClick={() => setOpen(true)} className="p-2 -ml-2 text-stone-600 dark:text-muted-foreground hover:text-stone-900 dark:hover:text-foreground">
           <Menu size={22} />
         </button>
         <div className="flex items-center gap-2 ml-2">
           <div className="w-6 h-6 rounded-md bg-[#e07b55] flex items-center justify-center">
             <span className="text-white text-[10px] font-black">F</span>
           </div>
-          <span className="font-black text-stone-900 text-sm">Forma</span>
+          <span className="font-black text-stone-900 dark:text-foreground text-sm">Forma</span>
         </div>
       </div>
 
@@ -99,12 +99,12 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       )}
 
       {/* ── 모바일 드로어 패널 ─────────────────────────────── */}
-      <div className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-64 bg-[#f5f0e8] shadow-xl transition-transform duration-300
+      <div className={`lg:hidden fixed top-0 left-0 bottom-0 z-50 w-64 bg-[#f5f0e8] dark:bg-background shadow-xl transition-transform duration-300
         ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <button
           onClick={() => setOpen(false)}
-          className="absolute top-4 right-4 p-1.5 text-stone-400 hover:text-stone-700"
+          className="absolute top-4 right-4 p-1.5 text-stone-400 dark:text-muted-foreground hover:text-stone-700 dark:hover:text-foreground"
         >
           <X size={18} />
         </button>

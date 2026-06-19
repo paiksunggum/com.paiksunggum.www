@@ -28,7 +28,7 @@ export default function SubscribedFavoritesRow() {
   }
 
   return (
-    <section aria-label="구독중" className="bg-[#f1efe7] px-4 pb-3 pt-5">
+    <section aria-label="구독중" className="bg-[#f1efe7] dark:bg-muted px-4 pb-3 pt-5">
       <div className="mx-auto max-w-5xl">
         <p className="mb-4 text-sm font-semibold text-foreground">구독중</p>
 
@@ -89,7 +89,7 @@ export default function SubscribedFavoritesRow() {
                         alt={provider.name}
                         seed={provider.id}
                         size={MAIN_SUBSCRIPTION_AVATAR_SIZE}
-                        className="shadow-sm ring-2 ring-[#f1efe7]"
+                        className="shadow-sm ring-2 ring-[#f1efe7] dark:ring-muted"
                       />
                       <p className="w-full truncate text-center text-xs font-semibold text-foreground">
                         {provider.name}

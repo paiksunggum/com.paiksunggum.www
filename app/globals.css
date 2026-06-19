@@ -63,46 +63,55 @@
 }
 
 .dark {
-  --background: oklch(0.22 0.042 285);
-  --foreground: oklch(0.93 0.022 285);
-  --card: oklch(0.27 0.048 285);
-  --card-foreground: oklch(0.93 0.022 285);
-  --popover: oklch(0.27 0.048 285);
-  --popover-foreground: oklch(0.93 0.022 285);
+  /* Near-black base (iOS dark mode style) */
+  --background: oklch(0.12 0.008 260);
+  --foreground: oklch(0.93 0.01 280);
+  --card: oklch(0.17 0.01 260);
+  --card-foreground: oklch(0.93 0.01 280);
+  --popover: oklch(0.17 0.01 260);
+  --popover-foreground: oklch(0.93 0.01 280);
   --primary: oklch(0.72 0.12 286);
-  --primary-foreground: oklch(0.22 0.05 285);
-  --secondary: oklch(0.32 0.04 285);
-  --secondary-foreground: oklch(0.93 0.022 285);
-  --muted: oklch(0.32 0.04 285);
-  --muted-foreground: oklch(0.68 0.03 285);
-  --accent: oklch(0.34 0.045 285);
-  --accent-foreground: oklch(0.93 0.022 285);
+  --primary-foreground: oklch(0.12 0.008 260);
+  --secondary: oklch(0.22 0.01 260);
+  --secondary-foreground: oklch(0.93 0.01 280);
+  --muted: oklch(0.22 0.01 260);
+  --muted-foreground: oklch(0.65 0.01 280);
+  --accent: oklch(0.24 0.012 260);
+  --accent-foreground: oklch(0.93 0.01 280);
   --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.96 0.02 285);
-  --border: oklch(0.36 0.045 285);
-  --input: oklch(0.36 0.045 285);
+  --destructive-foreground: oklch(0.96 0.01 280);
+  --border: oklch(0.27 0.012 260);
+  --input: oklch(0.27 0.012 260);
   --ring: oklch(0.62 0.1 286);
   --chart-1: oklch(0.65 0.18 286);
   --chart-2: oklch(0.62 0.12 200);
   --chart-3: oklch(0.55 0.1 265);
   --chart-4: oklch(0.72 0.14 85);
   --chart-5: oklch(0.68 0.14 60);
-  --sidebar: oklch(0.24 0.044 285);
-  --sidebar-foreground: oklch(0.93 0.022 285);
+  --sidebar: oklch(0.15 0.008 260);
+  --sidebar-foreground: oklch(0.93 0.01 280);
   --sidebar-primary: oklch(0.72 0.12 286);
-  --sidebar-primary-foreground: oklch(0.22 0.05 285);
-  --sidebar-accent: oklch(0.34 0.045 285);
-  --sidebar-accent-foreground: oklch(0.93 0.022 285);
-  --sidebar-border: oklch(0.36 0.045 285);
+  --sidebar-primary-foreground: oklch(0.12 0.008 260);
+  --sidebar-accent: oklch(0.24 0.012 260);
+  --sidebar-accent-foreground: oklch(0.93 0.01 280);
+  --sidebar-border: oklch(0.27 0.012 260);
   --sidebar-ring: oklch(0.62 0.1 286);
-  --hero-surface: oklch(0.36 0.038 285);
-  --hero-surface-raised: oklch(0.4 0.042 285);
-  --hero-scrim: oklch(0.3 0.042 285 / 0.26);
-  --hero-glass: oklch(0.44 0.046 285 / 0.4);
-  --hero-control: oklch(0.42 0.046 285 / 0.48);
-  --hero-control-hover: oklch(0.36 0.048 285 / 0.6);
-  --hero-nav-from: oklch(0.42 0.044 285 / 0.64);
-  --hero-nav-via: oklch(0.4 0.04 285 / 0.3);
+  /* Hero / sports section */
+  --hero-surface: oklch(0.17 0.01 260);
+  --hero-surface-raised: oklch(0.22 0.012 260);
+  --hero-foreground: oklch(0.93 0.01 280);
+  --hero-muted: oklch(0.65 0.01 280);
+  --hero-score-text: oklch(0.65 0.01 280);
+  --hero-control-active: oklch(0.3 0.015 260);
+  --hero-control-idle: oklch(0.2 0.01 260 / 0.7);
+  --hero-control-hover: oklch(0.25 0.012 260 / 0.85);
+  --hero-scrim: oklch(0.08 0.006 260 / 0.4);
+  --hero-glass: oklch(0.25 0.012 260 / 0.5);
+  --hero-nav-from: oklch(0.2 0.01 260 / 0.7);
+  --hero-nav-via: oklch(0.17 0.008 260 / 0.35);
+  --nav-surface: oklch(0.13 0.008 260);
+  --hero-border: oklch(1 0 0 / 0.1);
+  --hero-border-strong: oklch(1 0 0 / 0.18);
 }
 
 @theme inline {

@@ -66,7 +66,7 @@ export default function NavWeather({ variant }: NavWeatherProps) {
 
   const shell =
     isHome || isWarm
-      ? "border-[#0D3D2E]/15 bg-white/70 text-[#0D3D2E] shadow-sm"
+      ? "border-[#0D3D2E]/15 bg-white/70 text-[#0D3D2E] shadow-sm dark:border-white/15 dark:bg-white/10 dark:text-foreground dark:shadow-none"
       : "border-border bg-muted/50 text-foreground";
 
   if (loading) {

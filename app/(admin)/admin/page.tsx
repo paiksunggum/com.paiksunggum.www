@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTheme } from 'next-themes'
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import { Settings, Info, ArrowRight } from 'lucide-react'
 
@@ -29,18 +30,30 @@ const channels = [
 
 export default function DashboardPage() {
   const [mounted, setMounted] = useState(false)
+  const { resolvedTheme } = useTheme()
   useEffect(() => { setMounted(true) }, [])
 
+  const isDark = mounted && resolvedTheme === 'dark'
+  const tickColor = isDark ? '#71717a' : '#9ca3af'
+  const tooltipStyle = {
+    borderRadius: 12,
+    border: 'none',
+    boxShadow: isDark ? '0 4px 20px rgba(0,0,0,0.5)' : '0 4px 20px rgba(0,0,0,0.1)',
+    fontSize: 12,
+    backgroundColor: isDark ? '#17171f' : '#ffffff',
+    color: isDark ? '#e4e4e7' : '#1c1917',
+  }
+
   return (
-    <div className="min-h-screen bg-[#f5f0e8] p-5 lg:p-8 space-y-6">
+    <div className="min-h-screen bg-[#f5f0e8] dark:bg-background p-5 lg:p-8 space-y-6">
 
       {/* ── Header ─────────────────────────────────────────────── */}
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-4xl font-black text-stone-900 tracking-tight">Dashboard</h1>
+            <h1 className="text-4xl font-black text-stone-900 dark:text-foreground tracking-tight">Dashboard</h1>
             <span className="w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center">1</span>
-            <button className="text-stone-400 hover:text-stone-600 transition-colors">
+            <button className="text-stone-400 dark:text-muted-foreground hover:text-stone-600 dark:hover:text-foreground transition-colors">
               <Settings size={17} />
             </button>
           </div>
@@ -53,23 +66,23 @@ export default function DashboardPage() {
               { label: '콘텐츠',    value: '48개'  },
             ].map(({ label, value }) => (
               <div key={label}>
-                <p className="text-xs text-stone-500 flex items-center gap-1 mb-1">
+                <p className="text-xs text-stone-500 dark:text-muted-foreground flex items-center gap-1 mb-1">
                   {label}
-                  <Info size={11} className="text-stone-400" />
+                  <Info size={11} className="text-stone-400 dark:text-muted-foreground" />
                 </p>
-                <p className="text-3xl font-black text-stone-900 tracking-tight">{value}</p>
+                <p className="text-3xl font-black text-stone-900 dark:text-foreground tracking-tight">{value}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Upgrade banner */}
-        <div className="hidden lg:flex shrink-0 w-64 bg-[#f0ebe0] rounded-2xl p-5 relative overflow-hidden">
+        <div className="hidden lg:flex shrink-0 w-64 bg-[#f0ebe0] dark:bg-card rounded-2xl p-5 relative overflow-hidden">
           <div>
-            <p className="text-lg font-black text-stone-900 leading-snug">
+            <p className="text-lg font-black text-stone-900 dark:text-foreground leading-snug">
               <span className="text-[#e07b55]">Upgrade</span> Your<br />Platform
             </p>
-            <p className="text-xs text-stone-400 mt-1">Pro plan for better results</p>
+            <p className="text-xs text-stone-400 dark:text-muted-foreground mt-1">Pro plan for better results</p>
           </div>
           <button className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#e07b55] text-white font-black text-xs flex items-center justify-center shadow-lg shadow-[#e07b55]/30">
             NOW
@@ -87,12 +100,12 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
         {/* Area chart */}
-        <div className="lg:col-span-2 bg-white rounded-2xl p-6">
+        <div className="lg:col-span-2 bg-white dark:bg-card rounded-2xl p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-2xl font-black text-stone-900">Activity</h2>
+            <h2 className="text-2xl font-black text-stone-900 dark:text-foreground">Activity</h2>
             <div className="flex items-center gap-3">
-              <p className="text-xs text-stone-400">매 3시간 업데이트</p>
-              <button className="text-xs border border-stone-200 rounded-full px-3 py-1.5 text-stone-600 font-medium">
+              <p className="text-xs text-stone-400 dark:text-muted-foreground">매 3시간 업데이트</p>
+              <button className="text-xs border border-stone-200 dark:border-border rounded-full px-3 py-1.5 text-stone-600 dark:text-foreground font-medium">
                 01-07 Jun ▾
               </button>
             </div>
@@ -107,11 +120,11 @@ export default function DashboardPage() {
                     <stop offset="95%" stopColor="#e07b55" stopOpacity={0}    />
                   </linearGradient>
                 </defs>
-                <XAxis dataKey="day" tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} axisLine={false} tickLine={false}
+                <XAxis dataKey="day" tick={{ fontSize: 11, fill: tickColor }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 11, fill: tickColor }} axisLine={false} tickLine={false}
                   tickFormatter={v => v >= 1000 ? `${(v/1000).toFixed(0)}k` : v} />
                 <Tooltip
-                  contentStyle={{ borderRadius: 12, border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', fontSize: 12 }}
+                  contentStyle={tooltipStyle}
                   formatter={(v: number) => [`${v.toLocaleString()}`, 'API 요청']}
                   labelFormatter={l => `Day ${l}`}
                 />
@@ -125,8 +138,8 @@ export default function DashboardPage() {
         </div>
 
         {/* Top performers */}
-        <div className="bg-white rounded-2xl p-6">
-          <h2 className="text-2xl font-black text-stone-900 mb-5">Top Users</h2>
+        <div className="bg-white dark:bg-card rounded-2xl p-6">
+          <h2 className="text-2xl font-black text-stone-900 dark:text-foreground mb-5">Top Users</h2>
           <div className="space-y-4">
             {topPerformers.map(({ name, handle, pct, bg }) => (
               <div key={handle} className="flex items-center gap-3">
@@ -137,26 +150,26 @@ export default function DashboardPage() {
                   {name[0]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-bold text-stone-900">{name}</p>
-                  <p className="text-xs text-stone-400">{handle}</p>
+                  <p className="text-sm font-bold text-stone-900 dark:text-foreground">{name}</p>
+                  <p className="text-xs text-stone-400 dark:text-muted-foreground">{handle}</p>
                 </div>
-                <p className="text-sm font-black text-stone-900">{pct}</p>
+                <p className="text-sm font-black text-stone-900 dark:text-foreground">{pct}</p>
               </div>
             ))}
           </div>
-          <button className="flex items-center gap-1 text-sm text-stone-500 hover:text-stone-800 transition-colors mt-5 font-medium">
+          <button className="flex items-center gap-1 text-sm text-stone-500 dark:text-muted-foreground hover:text-stone-800 dark:hover:text-foreground transition-colors mt-5 font-medium">
             View More <ArrowRight size={14} />
           </button>
         </div>
       </div>
 
       {/* ── Channels ───────────────────────────────────────────── */}
-      <div className="bg-[#e4f0f0] rounded-2xl p-6">
+      <div className="bg-[#e4f0f0] dark:bg-card rounded-2xl p-6">
         <div className="flex flex-col sm:flex-row gap-6">
           {/* Description */}
           <div className="shrink-0 sm:w-44">
-            <p className="text-2xl font-black text-stone-900 mb-2">Channels</p>
-            <p className="text-sm text-stone-500 leading-relaxed">
+            <p className="text-2xl font-black text-stone-900 dark:text-foreground mb-2">Channels</p>
+            <p className="text-sm text-stone-500 dark:text-muted-foreground leading-relaxed">
               서비스 채널별 통계 <strong>1주일</strong> 기준
             </p>
           </div>
@@ -166,7 +179,7 @@ export default function DashboardPage() {
             {channels.map(({ name, handle, pct, color }) => (
               <div
                 key={name}
-                className="bg-white rounded-2xl p-4 min-w-[110px] shrink-0 flex flex-col items-center gap-2"
+                className="bg-white dark:bg-muted rounded-2xl p-4 min-w-[110px] shrink-0 flex flex-col items-center gap-2"
               >
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-black"
@@ -175,8 +188,8 @@ export default function DashboardPage() {
                   {name[0]}
                 </div>
                 <div className="text-center">
-                  <p className="text-xs font-bold text-stone-900">{name}</p>
-                  <p className="text-[10px] text-stone-400">{handle}</p>
+                  <p className="text-xs font-bold text-stone-900 dark:text-foreground">{name}</p>
+                  <p className="text-[10px] text-stone-400 dark:text-muted-foreground">{handle}</p>
                 </div>
                 <p className={`text-lg font-black ${pct.startsWith('+') ? 'text-emerald-500' : 'text-red-500'}`}>
                   {pct}
