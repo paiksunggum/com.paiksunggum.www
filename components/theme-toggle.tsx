@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { navActionClassName, NavVariant } from "@/components/nav-icon-action";
+import { navActionClassName, NavTooltip, NavVariant } from "@/components/nav-icon-action";
 
 function ToggleOnIcon() {
   return (
@@ -49,13 +49,15 @@ export function ThemeToggle({ navVariant }: { navVariant: NavVariant }) {
   if (!mounted) return <span className="size-9 shrink-0" />;
 
   return (
-    <button
-      type="button"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      aria-label="테마 전환"
-      className={navActionClassName(navVariant)}
-    >
-      {theme === "dark" ? <ToggleOnIcon /> : <ToggleOffIcon />}
-    </button>
+    <NavTooltip label="다크모드">
+      <button
+        type="button"
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+        aria-label="테마 전환"
+        className={navActionClassName(navVariant)}
+      >
+        {theme === "dark" ? <ToggleOnIcon /> : <ToggleOffIcon />}
+      </button>
+    </NavTooltip>
   );
 }
