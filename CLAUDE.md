@@ -1,1 +1,1 @@
-../vault/www/CLAUDE.md
+../CLAUDE.md
