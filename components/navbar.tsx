@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogIn, Upload, LayoutDashboard } from "lucide-react";
+import { LogIn, Upload, LayoutDashboard, Mail } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -97,6 +97,15 @@ export default function Navbar() {
               aria-label="관리자 대시보드"
             >
               <LayoutDashboard className="h-4 w-4 shrink-0" aria-hidden="true" />
+            </Link>
+          </NavTooltip>
+          <NavTooltip label="AI 이메일 발송">
+            <Link
+              href="/automode"
+              className={navActionClassName(navVariant)}
+              aria-label="AI 이메일 발송"
+            >
+              <Mail className="h-4 w-4 shrink-0" aria-hidden="true" />
             </Link>
           </NavTooltip>
           <NavTooltip label="파일 올리기">
